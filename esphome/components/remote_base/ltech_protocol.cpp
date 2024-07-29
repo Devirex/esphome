@@ -51,7 +51,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   }
   ESP_LOGD(TAG, "Detected Header Mark");
   
-  for (out.nbits = 0; out.nbits < 110; out.nbits++) {
+  for (out.nbits = 0; out.nbits < 106; out.nbits++) {
     uint8_t idx = out.nbits/8;
     uint8_t mask = out.nbits%8;
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
