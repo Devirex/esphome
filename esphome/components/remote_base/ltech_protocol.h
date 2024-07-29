@@ -8,10 +8,14 @@
 namespace esphome {
 namespace remote_base {
 
+struct uint24_t
+{
+     unsigned int  int24 : 24;
+};
 struct LTECHData {
   uint32_t address;
   uint8_t mode;
-  uint24_t rgb;
+  uint32_t rgb : 24;
   uint8_t function;
   uint8_t white;
   uint8_t speed;
