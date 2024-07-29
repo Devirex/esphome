@@ -51,7 +51,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   }
   ESP_LOGD(TAG, "Detected Header Mark");
   
-  for (out.nbits = 0; out.nbits < 106; out.nbits++) {
+  for (out.nbits = 0; out.nbits < 104; out.nbits++) {
     uint8_t idx = out.nbits/8;
     uint8_t mask = out.nbits%8;
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
@@ -60,17 +60,13 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       buffer[idx] &= ~(1 << mask);
     } else if (src.expect_mark(FOOTER_MARK_US)) {
       ESP_LOGD(TAG, "Detected Footer Mark");
-      // ESP_LOGD(TAG, "%08", buffer[0]);
-      // ESP_LOGD(TAG, "%08", buffer[1]);
-      // ESP_LOGD(TAG, "%08", buffer[2]);
-      // ESP_LOGD(TAG, "%08", buffer[3]);
-      // memcpy(&out, buffer, sizeof(buffer));
-      // return out;
+      memcpy(&out, buffer, sizeof(buffer));
+      return out;
     } else {
       return {};
     }
   }
-  ESP_LOGD(TAG, "Detected too long");
+  memcpy(&out, buffer, sizeof(buffer));
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
