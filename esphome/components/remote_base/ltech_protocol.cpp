@@ -35,14 +35,13 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .data = {0, 0, 0, 0},
       .nbits = 0,
   };
-  while (src.expect_item(SYNC_US,SYNC_US)){
-    ESP_LOGD(TAG, "Detected Sync");
-  }
+  while (src.expect_item(SYNC_US,SYNC_US))
+    ESP_LOGVV(TAG, "Detected SYNC"); //Detect Sync
 
   if (!src.expect_item(SYNC_US, HEADER_LOW_US)) {
     return {};
   }
-  ESP_LOGI(TAG, "Detected Header Mark");
+  ESP_LOGD(TAG, "Detected Header Mark");
   
   for (out.nbits = 0; out.nbits < 104; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
