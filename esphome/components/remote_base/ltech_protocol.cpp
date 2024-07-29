@@ -50,9 +50,33 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   
   for (out.nbits = 0; out.nbits < 104; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
-      out.data[out.nbits/32] = (out.data[out.nbits/32] << 1) | 1;
+      if(out.nbits < 32){
+        out.address = (out.address << 1) | 1;
+      }else if(out.nbits < 40){
+        out.mode = (out.mode << 1) | 1;
+      }else if(out.nbits < 48){
+        out.rgb = (out.rgb << 1) | 1;
+      }else if(out.nbits < 56){
+        out.function = (out.function << 1) | 1;
+      }else if(out.nbits < 64){
+        out.white = (out.white << 1) | 1;
+      }else if(out.nbits < 72){
+        out.speed = (out.speed << 1) | 1;
+      }
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
-      out.data[out.nbits/32] = (out.data[out.nbits/32] << 1) | 0;
+      if(out.nbits < 32){
+        out.address = (out.address << 1) | 0;
+      }else if(out.nbits < 40){
+        out.mode = (out.mode << 1) | 0;
+      }else if(out.nbits < 48){
+        out.rgb = (out.rgb << 1) | 0;
+      }else if(out.nbits < 56){
+        out.function = (out.function << 1) | 0;
+      }else if(out.nbits < 64){
+        out.white = (out.white << 1) | 0;
+      }else if(out.nbits < 72){
+        out.speed = (out.speed << 1) | 0;
+      }
     } else if (src.expect_mark(FOOTER_MARK_US)) {
       return out;
     } else {
@@ -63,8 +87,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
-  ESP_LOGI(TAG, "Received LTECH: 0x%08" PRIX32 "%08" PRIX32 "%08" PRIX32 "%08" PRIX32 ", nbits=%d", data.data[0], data.data[1], data.data[2] ,data.data[3], data.nbits );
-}
+  ESP_LOGI(TAG, "Received LTECH address: 0x%08" PRIX32 " mode: 0x%02" PRIX32 ", rgb: 0x%06" PRIX32 ", mode: 0x%02 " PRIX32 ", function: 0x%02" PRIX32 ", white: 0x%02" PRIX32 ", speed: 0x%02" PRIX32 ", nbits=%d", data.address, data.mode, data.rgb , data.function, data.white, data.speed, data.nbits );
 
 }  // namespace remote_base
 } 
