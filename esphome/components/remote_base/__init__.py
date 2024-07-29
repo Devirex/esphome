@@ -646,7 +646,7 @@ LTECHData, LTECHBinarySensor, LTECHTrigger, LTECHAction, LTECHDumper = declare_p
 LTECH_SCHEMA = cv.Schema(
     {
         cv.Required(CONF_DATA): cv.hex_uint32_t,
-        cv.Optional(CONF_NBITS, default=208): cv.one_of(208, 280, int=True),
+        cv.Optional(CONF_NBITS, default=104): cv.one_of(104, 104, int=True),
     }
 )
 

@@ -6,8 +6,7 @@ namespace remote_base {
 
 static const char *const TAG = "remote.ltech";
 
-static const int32_t TICK_US = 315;
-static const int32_t HEADER_HIGH_US = 315;
+static const int32_t SYNC_US = 315;
 static const int32_t HEADER_LOW_US = 1197;
 static const int32_t BIT_ONE_HIGH_US = 630;
 static const int32_t BIT_ONE_LOW_US = 283;
@@ -36,21 +35,21 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .data = 0,
       .nbits = 0,
   };
-  while (src.expect_item(HEADER_HIGH_US,BIT_ZERO_HIGH_US)){
-    ESP_LOGI(TAG, "Detected Header Start");
+  while (src.expect_item(SYNC_US,SYNC_US)){
+    ESP_LOGD(TAG, "Detected Sync");
   }
 
-  if (!src.expect_item(HEADER_HIGH_US, HEADER_LOW_US)) {
+  if (!src.expect_item(SYNC_US, HEADER_LOW_US)) {
     return {};
   }
   ESP_LOGI(TAG, "Detected Header Mark");
   
-  for (out.nbits = 0; out.nbits < 208; out.nbits++) {
+  for (out.nbits = 0; out.nbits < 104; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
       out.data = (out.data << 1) | 1;
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
       out.data = (out.data << 1) | 0;
-    } else if (out.nbits == 208) {
+    } else if (out.nbits == 104) {
       return out;
     } else {
       return {};
