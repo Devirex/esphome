@@ -16,7 +16,7 @@ static const int32_t BIT_ZERO_SPACE_US = -1.8 * TICK_US;
 static const int32_t FOOTER_MARK_US = 3.8 * TICK_US;
 static const int32_t FOOTER_SPACE_US = -51 * TICK_US;
 
-void LTECHProtocol::encode(RemoteTransmitData *dst, const LGData &data) {
+void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   dst->set_carrier_frequency(38000);
   dst->reserve(2 + data.nbits * 2u);
 
@@ -32,7 +32,7 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LGData &data) {
 
   dst->mark(BIT_HIGH_US);
 }
-optional<LGData> LTECHProtocol::decode(RemoteReceiveData src) {
+optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   LGData out{
       .data = 0,
       .nbits = 0,
@@ -45,7 +45,7 @@ optional<LGData> LTECHProtocol::decode(RemoteReceiveData src) {
       out.data = (out.data << 1) | 1;
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_SPACE_US)) {
       out.data = (out.data << 1) | 0;
-    } else if (out.nbits == 28) {
+    } else if (out.nbits == 208) {
       return out;
     } else {
       return {};
@@ -54,8 +54,8 @@ optional<LGData> LTECHProtocol::decode(RemoteReceiveData src) {
 
   return out;
 }
-void LTECHProtocol::dump(const LGData &data) {
-  ESP_LOGI(TAG, "Received LG: data=0x%08" PRIX32 ", nbits=%d", data.data, data.nbits);
+void LTECHProtocol::dump(const LTECHData &data) {
+  ESP_LOGI(TAG, "Received LTECH: data=0x%08" PRIX32 ", nbits=%d", data.data, data.nbits);
 }
 
 }  // namespace remote_base
