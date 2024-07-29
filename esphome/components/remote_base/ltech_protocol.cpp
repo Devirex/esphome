@@ -32,8 +32,13 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
 }
 optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   LTECHData out{
-      .data = {0, 0, 0, 0},
-      .nbits = 0,
+      .address = 0,
+      .mode = 0,
+      .rgb = 0,
+      .function = 0,
+      .white = 0,
+      .speed = 0,
+      .nbits = 0
   };
   while (src.expect_item(SYNC_US,SYNC_US))
     ESP_LOGVV(TAG, "Detected SYNC"); //Detect Sync
@@ -58,7 +63,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
-  ESP_LOGI(TAG, "Received LTECH: 0x%08" PRIX32 "%08" PRIX32 "%08" PRIX32 "%02" PRIX32 ", nbits=%d", data.data[0], data.data[1], data.data[2] ,data.data[3], data.nbits );
+  ESP_LOGI(TAG, "Received LTECH: 0x%08" PRIX32 "%08" PRIX32 "%08" PRIX32 "%08" PRIX32 ", nbits=%d", data.data[0], data.data[1], data.data[2] ,data.data[3], data.nbits );
 }
 
 }  // namespace remote_base
