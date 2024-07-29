@@ -40,7 +40,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
     return {};
   }
   ESP_LOGI(TAG, "Detected Header Mark");
-  if (!src.expect_space(BIT_ZERO_LOW_US)){
+  if (!src.expect_space(BIT_ZERO_HIGH_US)){
     return {};
   }
   ESP_LOGI(TAG, "Detected Header low");
