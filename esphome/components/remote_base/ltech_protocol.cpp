@@ -20,7 +20,7 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   dst->set_carrier_frequency(38000);
   dst->reserve(2 + data.nbits * 2u);
 
-  dst->item(HEADER_HIGH_US, HEADER_LOW_US);
+  dst->item(HEADER_MARK_US, HEADER_SPACE_US);
 
   for (uint32_t mask = 1UL << (data.nbits - 1); mask != 0; mask >>= 1) {
     if (data.data & mask) {
