@@ -8,10 +8,6 @@
 namespace esphome {
 namespace remote_base {
 
-struct uint24_t
-{
-     unsigned int  int24 : 24;
-};
 struct LTECHData {
   uint32_t address;
   uint8_t mode;
@@ -20,8 +16,6 @@ struct LTECHData {
   uint8_t white;
   uint8_t speed;
   uint8_t nbits;
-
-  bool operator==(const LTECHData &rhs) const { return data == rhs.data && nbits == rhs.nbits; }
 };
 
 class LTECHProtocol : public RemoteProtocol<LTECHData> {
