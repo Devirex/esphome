@@ -36,15 +36,12 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .data = 0,
       .nbits = 0,
   };
-  if (!src.expect_item(HEADER_HIGH_US,BIT_ZERO_HIGH_US)){
-    return {};
+  while (src.expect_item(HEADER_HIGH_US,BIT_ZERO_HIGH_US)){
+    ESP_LOGI(TAG, "Detected Header Start");
   }
-  ESP_LOGI(TAG, "Detected Header Start");
-  while(!src.expect_space(HEADER_LOW_US)){
-      if (!src.expect_item(HEADER_HIGH_US,BIT_ZERO_HIGH_US)){
-          ESP_LOGI(TAG, "Wrong Format");
-          return {};
-      }
+
+  if (!src.expect_item(HEADER_HIGH_US, HEADER_LOW_US)) {
+    return {};
   }
   ESP_LOGI(TAG, "Detected Header Mark");
   
