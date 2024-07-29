@@ -38,6 +38,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .speed = 0,
       .white = 0,
       .function = 0,
+      .crc = 0,
       .nbits = 0
   };
   while (src.expect_item(SYNC_US,SYNC_US))

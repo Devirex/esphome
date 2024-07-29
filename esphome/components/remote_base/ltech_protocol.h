@@ -15,6 +15,7 @@ struct LTECHData {
   uint8_t speed;
   uint8_t white;
   uint8_t function;
+  uint16_t crc;
   uint8_t nbits;
 
    bool operator==(const LTECHData &rhs) const { return address == rhs.address && mode == rhs.mode && rgb == rhs.rgb && function == rhs.function && white == rhs.white && speed == rhs.speed && nbits == rhs.nbits; }
