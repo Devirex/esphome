@@ -32,7 +32,7 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
 }
 optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   LTECHData out{
-      .data = 0,
+      .data[4] = 0,
       .nbits = 0,
   };
   while (src.expect_item(SYNC_US,SYNC_US)){
@@ -46,9 +46,9 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   
   for (out.nbits = 0; out.nbits < 104; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
-      out.data = (out.data << 1) | 1;
+      out.data[out.nbits/32] = (out.data[out.nbits/32] << 1) | 1;
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
-      out.data = (out.data << 1) | 0;
+      out.data[out.nbits/32] = (out.data[out.nbits/32] << 1) | 0;
     } else if (src.expect_mark(FOOTER_MARK_US)) {
       return out;
     } else {
@@ -59,7 +59,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
-  ESP_LOGI(TAG, "Received LTECH: data=%s, nbits=%d", (data.data).to_string().c_str(), data.nbits );
+  ESP_LOGI(TAG, "Received LTECH: 0x%08" PRIX32 "%08" PRIX32 "%08" PRIx32 "%08" PRIx32 ", nbits=%d", data.data[0], data.data[1], data.data[2] ,data.data[3], data.nbits );
 }
 
 }  // namespace remote_base
