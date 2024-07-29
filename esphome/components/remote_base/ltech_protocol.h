@@ -16,6 +16,8 @@ struct LTECHData {
   uint8_t white;
   uint8_t speed;
   uint8_t nbits;
+
+   bool operator==(const LTECHData &rhs) const { return address == rhs.address && mode == rhs.mode && rgb == rhs.rgb && function == rhs.function && white == rhs.white && speed == rhs.speed && nbits == rhs.nbits; }
 };
 
 class LTECHProtocol : public RemoteProtocol<LTECHData> {
@@ -39,7 +41,12 @@ template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<
 
   void encode(RemoteTransmitData *dst, Ts... x) override {
     LTECHData data{};
-    data.data = this->data_.value(x...);
+    data.address = this->address_.value(x...);
+    data.mode = this->mode_.value(x...);
+    data.rgb = this->rgb_.value(x...);
+    data.function = this->function_.value(x...);
+    data.white = this->white_.value(x...);
+    data.speed = this->speed_.value(x...);
     data.nbits = this->nbits_.value(x...);
     LTECHProtocol().encode(dst, data);
   }
