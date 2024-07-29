@@ -24,16 +24,16 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
 
   for (uint32_t mask = 1UL << (data.nbits - 1); mask != 0; mask >>= 1) {
     if (data.data & mask) {
-      dst->item(BIT_HIGH_US, BIT_ONE_LOW_US);
+      dst->item(BIT_ONE_HIGH_US, BIT_ONE_SPACE_US);
     } else {
-      dst->item(BIT_HIGH_US, BIT_ZERO_LOW_US);
+      dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_SPACE_US);
     }
   }
 
   dst->mark(BIT_HIGH_US);
 }
 optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
-  LGData out{
+  LTECHData out{
       .data = 0,
       .nbits = 0,
   };
