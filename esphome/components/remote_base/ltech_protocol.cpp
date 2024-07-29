@@ -30,7 +30,7 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
     }
   }
 
-  dst->mark(BIT_HIGH_US);
+  dst->mark(BIT_ONE_HIGH_US);
 }
 optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   LTECHData out{
