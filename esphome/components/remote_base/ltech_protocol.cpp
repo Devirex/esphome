@@ -42,7 +42,6 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .nbits = 0
   };
 
-  uint8_t buffer[13];
   while (src.expect_item(SYNC_US,SYNC_US))
     ESP_LOGVV(TAG, "Detected SYNC"); //Detect Sync
 
@@ -52,8 +51,6 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   ESP_LOGD(TAG, "Detected Header Mark");
   
   for (out.nbits = 0; out.nbits < 104; out.nbits++) {
-    uint8_t idx = out.nbits/8;
-    uint8_t mask = out.nbits%8;
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
       if(out.nbits < 32) out.address |= 1UL << (out.nbits - 1);
       else if(out.nbits < 40) out.mode |= 1UL << (out.nbits - 32);
@@ -78,7 +75,6 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
     }
   }
   ESP_LOGD(TAG, "End of Data");
-  memcpy(&out, buffer, sizeof(buffer));
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
