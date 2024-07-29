@@ -69,7 +69,6 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
     } else {
       return {};
     }
-  }
 
   //return out;
 }
