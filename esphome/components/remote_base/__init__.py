@@ -640,6 +640,46 @@ async def lg_action(var, config, args):
     cg.add(var.set_nbits(template_))
 
 
+
+# LTECH
+LTECHData, LTECHBinarySensor, LTECHTrigger, LTECHAction, LTECHDumper = declare_protocol("LTECH")
+LTECH_SCHEMA = cv.Schema(
+    {
+        cv.Required(CONF_DATA): cv.hex_uint32_t,
+        cv.Optional(CONF_NBITS, default=208): cv.one_of(208, 280, int=True),
+    }
+)
+
+
+@register_binary_sensor("ltech", LTECHBinarySensor, LTECH_SCHEMA)
+def lg_binary_sensor(var, config):
+    cg.add(
+        var.set_data(
+            cg.StructInitializer(
+                LTECHData,
+                ("data", config[CONF_DATA]),
+                ("nbits", config[CONF_NBITS]),
+            )
+        )
+    )
+
+
+@register_trigger("lg", LTECHTrigger, LTECHData)
+def lg_trigger(var, config):
+    pass
+
+
+@register_dumper("lg", LTECHDumper)
+def lg_dumper(var, config):
+    pass
+
+
+@register_action("lg", LTECHAction, LTECH_SCHEMA)
+async def lg_action(var, config, args):
+    template_ = await cg.templatable(config[CONF_DATA], args, cg.uint32)
+    cg.add(var.set_data(template_))
+    template_ = await cg.templatable(config[CONF_NBITS], args, cg.uint8)
+    cg.add(var.set_nbits(template_))
 # MagiQuest
 (
     MagiQuestData,
