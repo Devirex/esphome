@@ -37,8 +37,9 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .nbits = 0,
   };
   ESP_LOGI(TAG, "Received Header");
-  if (src.expect_space(HEADER_LOW_US))
+  if (!src.expect_space(HEADER_LOW_US)){
     return {};
+  }
 
   ESP_LOGI(TAG, "Detected Header");
   
