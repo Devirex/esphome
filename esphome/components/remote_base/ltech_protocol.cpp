@@ -89,7 +89,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       out.function = __builtin_bswap32(out.function);
       out.white = __builtin_bswap32(out.white);
       out.speed = __builtin_bswap32(out.speed);
-      out.crc = __builtin_bswap16(out.crc);
+      out.crc = __builtin_bswap32(out.crc);
       return out;
     } else {
       return {};
