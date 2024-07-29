@@ -55,28 +55,32 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
         out.address = (out.address << 1) | 1;
       }else if(out.nbits < 40){
         out.mode = (out.mode << 1) | 1;
-      }else if(out.nbits < 48){
-        out.rgb = (out.rgb << 1) | 1;
-      }else if(out.nbits < 56){
-        out.speed = (out.speed << 1) | 1;
       }else if(out.nbits < 64){
-        out.white = (out.white << 1) | 1;
+        out.rgb = (out.rgb << 1) | 1;
       }else if(out.nbits < 72){
         out.function = (out.function << 1) | 1;
+      }else if(out.nbits < 80){
+        out.white = (out.white << 1) | 1;
+      }else if(out.nbits < 88){
+        out.speed = (out.speed << 1) | 1;
+      }else if(out.nbits < 104){
+        out.crc = (out.crc << 1) | 1;
       }
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
       if(out.nbits < 32){
         out.address = (out.address << 1) | 0;
       }else if(out.nbits < 40){
-        out.mode = (out.mode << 1) | 0;
-      }else if(out.nbits < 48){
-        out.rgb = (out.rgb << 1) | 0;
-      }else if(out.nbits < 56){
-        out.speed = (out.speed << 1) | 0;
+        out.mode = (out.mode << 1)| 0;
       }else if(out.nbits < 64){
-        out.white = (out.white << 1) | 0;
+        out.rgb = (out.rgb << 1);
       }else if(out.nbits < 72){
-        out.function = (out.function << 1) | 0;
+        out.function = (out.function << 1)| 0;
+      }else if(out.nbits < 80){
+        out.white = (out.white << 1)| 0;
+      }else if(out.nbits < 88){
+        out.speed = (out.speed << 1)| 0;
+      }else if(out.nbits < 104){
+        out.crc = (out.crc << 1)| 0;
       }
     } else if (src.expect_mark(FOOTER_MARK_US)) {
       return out;
