@@ -21,7 +21,7 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   dst->item(SYNC_US, HEADER_LOW_US);
 
   for (uint32_t mask = 1UL << (data.nbits - 1); mask != 0; mask >>= 1) {
-    if (data.data[0] & mask) {
+    if (data.address & mask) {
       dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
     } else {
       dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
