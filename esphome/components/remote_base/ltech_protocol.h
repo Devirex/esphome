@@ -18,7 +18,7 @@ struct LTECHData {
   uint16_t crc;
   uint8_t nbits;
 
-   bool operator==(const LTECHData &rhs) const { return address == rhs.address && mode == rhs.mode && rgb == rhs.rgb && function == rhs.function && white == rhs.white && speed == rhs.speed && nbits == rhs.nbits; }
+   bool operator==(const LTECHData &rhs) const { return address == rhs.address && mode == rhs.mode && rgb == rhs.rgb && function == rhs.function && white == rhs.white && speed == rhs.speed && crc == rhs.crc && nbits == rhs.nbits; }
 };
 
 class LTECHProtocol : public RemoteProtocol<LTECHData> {
@@ -38,6 +38,7 @@ template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<
   TEMPLATABLE_VALUE(uint8_t, function)
   TEMPLATABLE_VALUE(uint8_t, white)
   TEMPLATABLE_VALUE(uint8_t, speed)
+  TEMPLATABLE_VALUE(uint16_t, crc)
   TEMPLATABLE_VALUE(uint8_t, nbits)
 
   void encode(RemoteTransmitData *dst, Ts... x) override {
@@ -48,6 +49,7 @@ template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<
     data.function = this->function_.value(x...);
     data.white = this->white_.value(x...);
     data.speed = this->speed_.value(x...);
+    data.crc = this->crc_.value(x...);
     data.nbits = this->nbits_.value(x...);
     LTECHProtocol().encode(dst, data);
   }
