@@ -12,9 +12,9 @@ struct LTECHData {
   uint32_t address;
   uint8_t mode;
   uint32_t rgb : 24;
-  uint8_t function;
-  uint8_t white;
   uint8_t speed;
+  uint8_t white;
+  uint8_t function;
   uint8_t nbits;
 
    bool operator==(const LTECHData &rhs) const { return address == rhs.address && mode == rhs.mode && rgb == rhs.rgb && function == rhs.function && white == rhs.white && speed == rhs.speed && nbits == rhs.nbits; }

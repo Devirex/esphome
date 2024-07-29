@@ -35,9 +35,9 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .address = 0,
       .mode = 0,
       .rgb = 0,
-      .function = 0,
-      .white = 0,
       .speed = 0,
+      .white = 0,
+      .function = 0,
       .nbits = 0
   };
   while (src.expect_item(SYNC_US,SYNC_US))
@@ -57,11 +57,11 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       }else if(out.nbits < 48){
         out.rgb = (out.rgb << 1) | 1;
       }else if(out.nbits < 56){
-        out.function = (out.function << 1) | 1;
+        out.speed = (out.speed << 1) | 1;
       }else if(out.nbits < 64){
         out.white = (out.white << 1) | 1;
       }else if(out.nbits < 72){
-        out.speed = (out.speed << 1) | 1;
+        out.function = (out.function << 1) | 1;
       }
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
       if(out.nbits < 32){
@@ -71,11 +71,11 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       }else if(out.nbits < 48){
         out.rgb = (out.rgb << 1) | 0;
       }else if(out.nbits < 56){
-        out.function = (out.function << 1) | 0;
+        out.speed = (out.speed << 1) | 0;
       }else if(out.nbits < 64){
         out.white = (out.white << 1) | 0;
       }else if(out.nbits < 72){
-        out.speed = (out.speed << 1) | 0;
+        out.function = (out.function << 1) | 0;
       }
     } else if (src.expect_mark(FOOTER_MARK_US)) {
       return out;
