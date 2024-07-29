@@ -83,6 +83,13 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
         out.crc = (out.crc << 1)| 0;
       }
     } else if (src.expect_mark(FOOTER_MARK_US)) {
+      out.address = __builtin_bswap32(out.address);
+      out.rgb = __builtin_bswap32(out.rgb);
+      out.mode = __builtin_bswap32(out.mode);
+      out.function = __builtin_bswap32(out.function);
+      out.white = __builtin_bswap32(out.white);
+      out.speed = __builtin_bswap32(out.speed);
+      out.crc = __builtin_bswap16(out.crc);
       return out;
     } else {
       return {};
