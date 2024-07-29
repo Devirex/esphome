@@ -40,6 +40,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   if (!src.expect_item(HEADER_MARK_US, HEADER_SPACE_US))
     return {};
 
+  ESP_LOGVV(TAG, "Received Header");
   for (out.nbits = 0; out.nbits < 208; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_SPACE_US)) {
       out.data = (out.data << 1) | 1;
