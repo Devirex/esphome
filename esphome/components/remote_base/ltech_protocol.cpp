@@ -14,7 +14,6 @@ static const int32_t BIT_ONE_SPACE_US = -0.9 * TICK_US;
 static const int32_t BIT_ZERO_HIGH_US = 1 * TICK_US;
 static const int32_t BIT_ZERO_SPACE_US = -1.8 * TICK_US;
 static const int32_t FOOTER_MARK_US = 3.8 * TICK_US;
-static const int32_t FOOTER_SPACE_US = -51 * TICK_US;
 
 void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   dst->set_carrier_frequency(38000);
@@ -40,7 +39,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   ESP_LOGI(TAG, "Received Header");
   if (!src.expect_item(HEADER_MARK_US, HEADER_SPACE_US))
     return {};
-
+  ESP_LOGI(TAG, "Detected Header");
   
   for (out.nbits = 0; out.nbits < 208; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_SPACE_US)) {
