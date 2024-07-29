@@ -66,6 +66,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       return {};
     }
   }
+  ESP_LOGD(TAG, "End of Data");
   memcpy(&out, buffer, sizeof(buffer));
   return out;
 }
