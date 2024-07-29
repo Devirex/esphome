@@ -51,7 +51,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   }
   ESP_LOGD(TAG, "Detected Header Mark");
   
-  for (out.nbits = 0; out.nbits < 104; out.nbits++) {
+  for (out.nbits = 0; out.nbits < 110; out.nbits++) {
     uint8_t idx = out.nbits/8;
     uint8_t mask = out.nbits%8;
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
@@ -59,18 +59,19 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
       buffer[idx] &= ~(1 << mask);
     } else if (src.expect_mark(FOOTER_MARK_US)) {
-      ESP_LOGD(TAG, "%08", buffer[0]);
-      ESP_LOGD(TAG, "%08", buffer[1]);
-      ESP_LOGD(TAG, "%08", buffer[2]);
-      ESP_LOGD(TAG, "%08", buffer[3]);
-      memcpy(&out, buffer, sizeof(buffer));
-      return out;
+      ESP_LOGD(TAG, "Detected Footer Mark");
+      // ESP_LOGD(TAG, "%08", buffer[0]);
+      // ESP_LOGD(TAG, "%08", buffer[1]);
+      // ESP_LOGD(TAG, "%08", buffer[2]);
+      // ESP_LOGD(TAG, "%08", buffer[3]);
+      // memcpy(&out, buffer, sizeof(buffer));
+      // return out;
     } else {
       return {};
     }
   }
 
-  return out;
+  //return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
   ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", data.address, data.mode, data.rgb , data.function, data.white, data.speed, data.crc, data.nbits );
