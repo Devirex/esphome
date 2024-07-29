@@ -26,7 +26,7 @@ uint8_t reverseBits(uint8_t byte) {
 
 // Generische Funktion zum Umkehren der Bits in 8-Bit-Schritten
 template <typename T>
-T reverseBitsIn8BitBlocks(T value) {
+T rev8Bit(T value) {
     
     // Erzeuge einen neuen Wert, der die umgekehrten 8-Bit-Blöcke enthält
     T reversedValue = 0;
@@ -107,8 +107,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
-  data = reverseBitsIn8BitBlocks(data);
-  ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", data.address, data.mode, data.rgb , data.function, data.white, data.speed, data.crc, data.nbits );
+  ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", rev8Bit(data.address), rev8Bit(data.mode), rev8Bit(data.rgb) , rev8Bit(data.function), rev8Bit(data.white), read8Bit(data.speed), read8Bit(data.crc), data.nbits );
 } 
 }  // namespace remote_base
 } 
