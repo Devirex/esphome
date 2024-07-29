@@ -83,13 +83,6 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
         out.crc = (out.crc << 1)| 0;
       }
     } else if (src.expect_mark(FOOTER_MARK_US)) {
-      out.address = __builtin_bswap32(out.address);
-      out.rgb = __builtin_bswap32(out.rgb);
-      out.mode = __builtin_bswap32(out.mode);
-      out.function = __builtin_bswap32(out.function);
-      out.white = __builtin_bswap32(out.white);
-      out.speed = __builtin_bswap32(out.speed);
-      out.crc = __builtin_bswap32(out.crc);
       return out;
     } else {
       return {};
@@ -99,7 +92,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
-  ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", data.address, data.mode, data.rgb , data.function, data.white, data.speed, data.crc, data.nbits );
+  ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", __bswap32(data.address), data.mode, data.rgb , data.function, data.white, data.speed, data.crc, data.nbits );
 } 
 }  // namespace remote_base
 } 
