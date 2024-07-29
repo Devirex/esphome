@@ -36,12 +36,14 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .data = 0,
       .nbits = 0,
   };
-  ESP_LOGI(TAG, "Received Header");
   if (!src.expect_mark(HEADER_HIGH_US)){
     return {};
   }
-
-  ESP_LOGI(TAG, "Detected Header");
+  ESP_LOGI(TAG, "Detected Header Mark");
+  if (!src.expect_space(BIT_ZERO_LOW_US)){
+    return {};
+  }
+  ESP_LOGI(TAG, "Detected Header low");
   
   for (out.nbits = 0; out.nbits < 208; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
