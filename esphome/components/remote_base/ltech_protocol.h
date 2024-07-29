@@ -15,7 +15,7 @@ struct LTECHData {
   bool operator==(const LTECHData &rhs) const { return data == rhs.data && nbits == rhs.nbits; }
 };
 
-class LGProtocol : public RemoteProtocol<LTECHData> {
+class LTECHProtocol : public RemoteProtocol<LTECHData> {
  public:
   void encode(RemoteTransmitData *dst, const LTECHData &data) override;
   optional<LTECHData> decode(RemoteReceiveData src) override;
