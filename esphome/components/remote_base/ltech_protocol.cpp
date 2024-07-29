@@ -42,7 +42,8 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .nbits = 0
   };
 
-  uint8_t buffer[13]
+  uint8_t buffer[13];
+  memset(buffer, 0, 13);
   while (src.expect_item(SYNC_US,SYNC_US))
     ESP_LOGVV(TAG, "Detected SYNC"); //Detect Sync
 
@@ -57,7 +58,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
       buffer[out.nbits/8] = buffer[out.nbits/8] | (0 << (out.nbits%8));
     } else if (src.expect_mark(FOOTER_MARK_US)) {
-      out = &buffer;
+      out = buffer;
       return out;
     } else {
       return {};
