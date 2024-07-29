@@ -664,22 +664,25 @@ def lg_binary_sensor(var, config):
     )
 
 
-@register_trigger("lg", LTECHTrigger, LTECHData)
+@register_trigger("ltech", LTECHTrigger, LTECHData)
 def lg_trigger(var, config):
     pass
 
 
-@register_dumper("lg", LTECHDumper)
+@register_dumper("ltech", LTECHDumper)
 def lg_dumper(var, config):
     pass
 
 
-@register_action("lg", LTECHAction, LTECH_SCHEMA)
+@register_action("ltech", LTECHAction, LTECH_SCHEMA)
 async def lg_action(var, config, args):
     template_ = await cg.templatable(config[CONF_DATA], args, cg.uint32)
     cg.add(var.set_data(template_))
     template_ = await cg.templatable(config[CONF_NBITS], args, cg.uint8)
     cg.add(var.set_nbits(template_))
+
+
+
 # MagiQuest
 (
     MagiQuestData,
