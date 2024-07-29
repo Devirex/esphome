@@ -9,7 +9,7 @@ namespace esphome {
 namespace remote_base {
 
 struct LTECHData {
-  uint32_t data;
+  uint32_t data[4];
   uint8_t nbits;
 
   bool operator==(const LTECHData &rhs) const { return data == rhs.data && nbits == rhs.nbits; }

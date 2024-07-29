@@ -32,7 +32,7 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
 }
 optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   LTECHData out{
-      .data[4] = 0,
+      .data = 0,
       .nbits = 0,
   };
   while (src.expect_item(SYNC_US,SYNC_US)){
