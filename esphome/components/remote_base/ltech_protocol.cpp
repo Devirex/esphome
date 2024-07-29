@@ -58,7 +58,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
-  ESP_LOGI(TAG, "Received LTECH: 0x%08" PRIX32 "%08" PRIX32 "%08" PRIX32 "%08" PRIX32 ", nbits=%d", data.data[0], data.data[1], data.data[2] ,data.data[3], data.nbits );
+  ESP_LOGI(TAG, "Received LTECH: 0x%08" PRIX32 "%08" PRIX32 "%08" PRIX32 "%08" PRIX32 ", nbits=%d", data.data[0], data.data[1], data.data[2] ,data.data[3]<<30, data.nbits );
 }
 
 }  // namespace remote_base
