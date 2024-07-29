@@ -69,8 +69,9 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
     } else {
       return {};
     }
-
-  //return out;
+  }
+  ESP_LOGD(TAG, "Detected too long");
+  return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
   ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", data.address, data.mode, data.rgb , data.function, data.white, data.speed, data.crc, data.nbits );
