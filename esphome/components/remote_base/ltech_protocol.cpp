@@ -58,7 +58,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       byte = (byte << 1) | 0;
     } else if (src.expect_mark(FOOTER_MARK_US)) {
       ESP_LOGD(TAG, "Detected Footer Mark");
-      return out.reverse();
+      return out;
     } else {
       return {};
     }
@@ -80,8 +80,9 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
         out.crc = (out.crc << 8) | reverse_bits(byte);
       }
     }
+  }
   ESP_LOGD(TAG, "End of Data");
-  return outreverse();
+  return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
   ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", data.address, data.mode, data.rgb, data.function, data.white, data.speed, data.crc, data.nbits );
