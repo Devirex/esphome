@@ -39,11 +39,16 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   if (!src.expect_mark(HEADER_HIGH_US)){
     return {};
   }
-  ESP_LOGI(TAG, "Detected Header Mark");
-  if (!src.expect_space(BIT_ZERO_HIGH_US)){
-    return {};
+  ESP_LOGI(TAG, "Detected Header Start");
+  while(!src.expect_space(HEADER_LOW_US)){
+      if (!src.expect_mark(HEADER_HIGH_US) || !src.expect_mark(BIT_ZERO_HIGH_US) ){
+          ESP_LOGI(TAG, "Wrong Format");
+          return {};
+
+      }
+
   }
-  ESP_LOGI(TAG, "Detected Header low");
+  ESP_LOGI(TAG, "Detected Header Mark");
   
   for (out.nbits = 0; out.nbits < 208; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
