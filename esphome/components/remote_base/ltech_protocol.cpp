@@ -41,6 +41,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .crc = 0,
       .nbits = 0
   };
+  bool buffer[104];
   while (src.expect_item(SYNC_US,SYNC_US))
     ESP_LOGVV(TAG, "Detected SYNC"); //Detect Sync
 
@@ -51,38 +52,11 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   
   for (out.nbits = 0; out.nbits < 104; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
-      if(out.nbits < 32){
-        out.address = (out.address << 1) | 1;
-      }else if(out.nbits < 40){
-        out.mode = (out.mode << 1) | 1;
-      }else if(out.nbits < 64){
-        out.rgb = (out.rgb << 1) | 1;
-      }else if(out.nbits < 72){
-        out.function = (out.function << 1) | 1;
-      }else if(out.nbits < 80){
-        out.white = (out.white << 1) | 1;
-      }else if(out.nbits < 88){
-        out.speed = (out.speed << 1) | 1;
-      }else if(out.nbits < 104){
-        out.crc = (out.crc << 1) | 1;
-      }
+      buffer [out.nbits] = 1;
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
-      if(out.nbits < 32){
-        out.address = (out.address << 1) | 0;
-      }else if(out.nbits < 40){
-        out.mode = (out.mode << 1)| 0;
-      }else if(out.nbits < 64){
-        out.rgb = (out.rgb << 1);
-      }else if(out.nbits < 72){
-        out.function = (out.function << 1)| 0;
-      }else if(out.nbits < 80){
-        out.white = (out.white << 1)| 0;
-      }else if(out.nbits < 88){
-        out.speed = (out.speed << 1)| 0;
-      }else if(out.nbits < 104){
-        out.crc = (out.crc << 1)| 0;
-      }
+      buffer [out.nbits] = 0;
     } else if (src.expect_mark(FOOTER_MARK_US)) {
+      out = buffer;
       return out;
     } else {
       return {};
@@ -92,7 +66,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
-  ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", __bswap32(data.address), data.mode, data.rgb , data.function, data.white, data.speed, data.crc, data.nbits );
+  ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", data.address, data.mode, data.rgb , data.function, data.white, data.speed, data.crc, data.nbits );
 } 
 }  // namespace remote_base
 } 
