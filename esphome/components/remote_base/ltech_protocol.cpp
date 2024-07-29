@@ -41,7 +41,6 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .crc = 0,
       .nbits = 0
   };
-  bool buffer[104];
   while (src.expect_item(SYNC_US,SYNC_US))
     ESP_LOGVV(TAG, "Detected SYNC"); //Detect Sync
 
@@ -52,11 +51,23 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   
   for (out.nbits = 0; out.nbits < 104; out.nbits++) {
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
-      buffer [out.nbits] = 1;
+      if(out.nbits<32) out.address |= 1UL << (out.nbits - 1);
+      else if (out.nbits<40) out.mode |= 1UL << (out.nbits - 32);
+      else if (out.nbits<64) out.rgb |= 1UL << (out.nbits - 40);
+      else if (out.nbits<72) out.function |= 1UL << (out.nbits - 64);
+      else if (out.nbits<80) out.white |= 1UL << (out.nbits - 72);
+      else if (out.nbits<88) out.speed |= 1UL << (out.nbits - 80);
+      else if (out.nbits<104) out.crc |= 1UL << (out.nbits - 88);
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
-      buffer [out.nbits] = 0;
+      if(out.nbits<32) out.address |= 0UL << (out.nbits - 1);
+      else if (out.nbits<40) out.mode |= 0UL << (out.nbits - 32);
+      else if (out.nbits<64) out.rgb |= 0UL << (out.nbits - 40);
+      else if (out.nbits<72) out.function |= 0UL << (out.nbits - 64);
+      else if (out.nbits<80) out.white |= 0UL << (out.nbits - 72);
+      else if (out.nbits<88) out.speed |= 0UL << (out.nbits - 80);
+      else if (out.nbits<104) out.crc |= 0UL << (out.nbits - 88);
     } else if (src.expect_mark(FOOTER_MARK_US)) {
-      out = buffer;
+      
       return out;
     } else {
       return {};
