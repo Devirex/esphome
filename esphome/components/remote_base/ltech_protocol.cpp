@@ -70,7 +70,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       } else if (out.nbits < 40) {
         out.mode = (out.mode << 8) | byte;
       } else if (out.nbits < 64) {  
-        out.rgb = (out.rgb << 8) | byte);
+        out.rgb = (out.rgb << 8) | byte;
       } else if (out.nbits < 72) {
         out.function = (out.function << 8) | byte;
       } else if (out.nbits < 80) {
