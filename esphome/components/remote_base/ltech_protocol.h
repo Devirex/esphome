@@ -35,7 +35,12 @@ DECLARE_REMOTE_PROTOCOL(LTECH)
 
 template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<Ts...> {
  public:
-  TEMPLATABLE_VALUE(uint32_t, data)
+  TEMPLATABLE_VALUE(uint32_t, address)
+  TEMPLATABLE_VALUE(uint8_t, mode)
+  TEMPLATABLE_VALUE(uint32_t, rgb)
+  TEMPLATABLE_VALUE(uint8_t, function)
+  TEMPLATABLE_VALUE(uint8_t, white)
+  TEMPLATABLE_VALUE(uint8_t, speed)
   TEMPLATABLE_VALUE(uint8_t, nbits)
 
   void encode(RemoteTransmitData *dst, Ts... x) override {
