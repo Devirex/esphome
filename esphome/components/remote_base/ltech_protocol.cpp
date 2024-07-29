@@ -55,9 +55,9 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
     uint8_t idx = out.nbits/8;
     uint8_t mask = out.nbits%8;
     if (src.expect_item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US)) {
-      buffer[idx] |= (1 << mask);
+      buffer[13-idx] |= (1 << mask);
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
-      buffer[idx] &= ~(1 << mask);
+      buffer[13-idx] &= ~(1 << mask);
     } else if (src.expect_mark(FOOTER_MARK_US)) {
       ESP_LOGD(TAG, "Detected Footer Mark");
       memcpy(&out, buffer, sizeof(buffer));
