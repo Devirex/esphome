@@ -58,7 +58,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
     } else if (src.expect_item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US)) {
       buffer[out.nbits/8] = buffer[out.nbits/8] | (0 << (out.nbits%8));
     } else if (src.expect_mark(FOOTER_MARK_US)) {
-      out = memcpy(&out, buffer, sizeof(buffer));
+      memcpy(&out, buffer, sizeof(buffer));
       return out;
     } else {
       return {};
