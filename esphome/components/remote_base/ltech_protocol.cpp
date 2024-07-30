@@ -63,23 +63,25 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       return {};
     }
 
-    if (out.nbits >0 && out.nbits % 7 == 0){
-      if (out.nbits < 32) {
-      out.address = (out.address << 8) | byte;
-      } else if (out.nbits < 40) {
+    if (out.nbits % 8 == 7 && out.nbits > 0) {
+      if(out.nbits < 32) {
+        out.address = (out.address << 8) | byte;
+      }else if(out.nbits < 40) {
         out.mode = (out.mode << 8) | byte;
-      } else if (out.nbits < 64) {  
+      }else if(out.nbits < 64) {
         out.rgb = (out.rgb << 8) | byte;
-      } else if (out.nbits < 72) {
+      }else if(out.nbits < 72) {
         out.function = (out.function << 8) | byte;
-      } else if (out.nbits < 80) {
+      }else if(out.nbits < 80) {
         out.white = (out.white << 8) | byte;
-      } else if (out.nbits < 88) {
+      }else if(out.nbits < 88) {
         out.speed = (out.speed << 8) | byte;
-      } else if (out.nbits < 104) {
+      }else if(out.nbits < 104) {
         out.crc = (out.crc << 8) | byte;
       }
     }
+
+
   }
   ESP_LOGD(TAG, "End of Data");
   return out;
