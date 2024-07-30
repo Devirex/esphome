@@ -63,7 +63,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       return {};
     }
 
-    if (out.nbits % 7 == 0) {
+    if (out.nbits % 8 == 0) {
       if (out.nbits < 32) {
       out.address = (out.address << 8) | byte;
       } else if (out.nbits < 40) {
