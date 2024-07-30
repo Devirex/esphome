@@ -34,7 +34,7 @@ static uint16_t crc16_xmodem(const std::vector<uint8_t>& data) {
 }
 
 void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
-  data.calculate_crc();
+  data.crc = crc16_xmodem({data.address, data.mode, data.rgb, data.function, data.white, data.speed});
   dump(data);
   dst->set_carrier_frequency(38000);
   dst->reserve(2 + data.nbits * 2u);
@@ -59,9 +59,9 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       .address = 0,
       .mode = 0,
       .rgb = 0,
-      .speed = 0,
-      .white = 0,
       .function = 0,
+      .white = 0,
+      .speed = 0,
       .crc = 0,
       .nbits = 0
   };
