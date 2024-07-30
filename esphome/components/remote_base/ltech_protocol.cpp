@@ -14,14 +14,16 @@ static const int32_t BIT_ZERO_HIGH_US = 315;
 static const int32_t BIT_ZERO_LOW_US = 567;
 static const int32_t FOOTER_MARK_US = 1197;
 
-uint16_t crc16_xmodem(std::vector<uint8_t>& data) {
+uint16_t crc16_xmodem(uint64_t data) {
     uint16_t crc = 0x0000; // Initial value
     uint16_t polynomial = 0x1021; // XMODEM polynomial
 
-    for (uint8_t byte : data) {
+    // Process each byte in the uint64_t data
+    for (int i = 7; i >= 0; --i) { // 8 bytes in a uint64_t
+        uint8_t byte = (data >> (i * 8)) & 0xFF; // Extract each byte
         crc ^= (byte << 8); // Bring in the byte
 
-        for (int i = 0; i < 8; ++i) { // Process each bit
+        for (int j = 0; j < 8; ++j) { // Process each bit
             if (crc & 0x8000) {
                 crc = (crc << 1) ^ polynomial;
             } else {
