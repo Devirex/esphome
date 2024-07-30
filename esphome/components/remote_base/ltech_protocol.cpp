@@ -42,8 +42,9 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   }
   dst->item(SYNC_US, HEADER_LOW_US);
 
+  uint8_t* bytePtr = reinterpret_cast<uint8_t*>(&ltechData);
   for (uint8_t idx = 0 ; idx < data.nbits; idx++) {
-    if (reinterpret_cast<uint8_t*>(*&data)[idx] == 1) {
+    if (bytePtr[idx] == 1) {
       dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
     } else {
       dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
