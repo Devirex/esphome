@@ -14,39 +14,21 @@ static const int32_t BIT_ZERO_HIGH_US = 315;
 static const int32_t BIT_ZERO_LOW_US = 567;
 static const int32_t FOOTER_MARK_US = 1197;
 
-uint16_t crc16_xmodem(const uint8_t* data, size_t length) {
-    uint16_t crc = 0x0000; // Initial value
-    uint16_t polynomial = 0x1021; // XMODEM polynomial
+uint16_t crc16_xmodem(initializer_list<uint8_t> data) {
+    uint16_t crc = 0xFFFF; // Initialwert
 
-    for (size_t i = 0; i < length; ++i) {
-        crc ^= (data[i] << 8); // Bring in each byte
-
-        for (int j = 0; j < 8; ++j) { // Process each bit
+    for (uint8_t byte : data) {
+        crc ^= (byte << 8);
+        for (int i = 0; i < 8; ++i) {
             if (crc & 0x8000) {
-                crc = (crc << 1) ^ polynomial;
+                crc = (crc << 1) ^ CRC16_XMODEM_POLY;
             } else {
                 crc <<= 1;
             }
         }
     }
-
-    return crc & 0xFFFF; // Ensure CRC is within 16 bits
-}
-
-vector<uint8_t> convertToBytes(uint32_t value32, uint64_t value64) {
-    vector<uint8_t> bytes;
-
-    // Extrahiere Bytes von uint32_t (4 Bytes)
-    for (int i = 3; i >= 0; --i) {
-        bytes.push_back((value32 >> (i * 8)) & 0xFF);
-    }
-
-    // Extrahiere Bytes von uint64_t (8 Bytes)
-    for (int i = 7; i >= 0; --i) {
-        bytes.push_back((value64 >> (i * 8)) & 0xFF);
-    }
-
-    return bytes;
+    
+    return crc;
 }
 
 void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
