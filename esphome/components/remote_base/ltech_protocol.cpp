@@ -89,7 +89,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       }else if(out.nbits < 88) {
         out.data = (out.data << 8) | byte;
       }else if(out.nbits < 104) {
-        out.crc = (out.crc << 8) | byte;
+        out.check = (out.check << 8) | byte;
       }
     }
 
