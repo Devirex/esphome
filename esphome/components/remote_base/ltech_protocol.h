@@ -43,8 +43,8 @@ template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<
     LTECHData data{};
     data.address = this->address_.value(x...);
     data.data = this->data_.value(x...);
+    data.check = crc16_xmodem(&data.data, sizeof(data.data));
     data.nbits = this->nbits_.value(x...);
-    data.check = crc16_xmodem(data.data);
     LTECHProtocol().encode(dst, data);
   }
 };
