@@ -14,17 +14,18 @@ static const int32_t BIT_ZERO_HIGH_US = 315;
 static const int32_t BIT_ZERO_LOW_US = 567;
 static const int32_t FOOTER_MARK_US = 1197;
 
-uint16_t calculateCRC16Xmodem(const uint8_t *data, size_t length) {
-    uint16_t crc = 0xFFFF; // Initialwert für CRC16-Xmodem
-    uint16_t polynomial = 0x1021;
+uint16_t crc16_xmodem(const uint8_t* data, size_t length) {
+    uint16_t crc = 0x0000; // Initialwert
+    const uint16_t polynomial = 0x1021;
 
     for (size_t i = 0; i < length; ++i) {
-        crc ^= (data[i] << 8); // XOR mit dem Byte
-        for (int j = 0; j < 8; ++j) { // Für jedes Bit
-            if (crc & 0x8000) { // MSB ist 1
-                crc = (crc << 1) ^ polynomial; // Verschiebe und XOR mit Polynom
+        crc ^= (data[i] << 8); // Byte in das hohe Byte des CRC verschieben
+
+        for (int j = 0; j < 8; ++j) { // Jedes Bit verarbeiten
+            if (crc & 0x8000) { // Wenn das höchste Bit gesetzt ist
+                crc = (crc << 1) ^ polynomial;
             } else {
-                crc <<= 1; // Nur Verschieben
+                crc <<= 1;
             }
         }
     }

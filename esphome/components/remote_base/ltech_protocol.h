@@ -8,7 +8,7 @@
 namespace esphome {
 namespace remote_base {
 
-uint16_t calculateCRC16Xmodem(const uint8_t *data, size_t length);
+uint16_t crc16_xmodem(const uint8_t *data, size_t length);
 struct LTECHData {
   uint32_t address;
   uint64_t data : 56;
@@ -17,24 +17,16 @@ struct LTECHData {
 
   bool operator==(const LTECHData &rhs) const { return address == rhs.address && data == rhs.data && check == rhs.check && nbits == rhs.nbits; }
   uint16_t calculate_crc() const {
-        // Byte-Array zum Packen der relevanten Daten (address und data)
-        uint8_t buffer[8]; // address (4 Byte) + data (4 Byte)
+        uint8_t byteArray[11]; // 4 Byte Address + 7 Byte Data
+        for (int i = 0; i < 4; ++i) {
+            byteArray[i] = static_cast<uint8_t>(address >> (24 - i * 8));
+        }
 
-        // address in die ersten 4 Bytes packen (Little-Endian)
-        buffer[0] = address & 0xFF;
-        buffer[1] = (address >> 8) & 0xFF;
-        buffer[2] = (address >> 16) & 0xFF;
-        buffer[3] = (address >> 24) & 0xFF;
-
-        // data in die nächsten 4 Bytes packen (56 Bit auf 8 Byte)
-        uint64_t dataToPack = data;
-        buffer[4] = dataToPack & 0xFF;
-        buffer[5] = (dataToPack >> 8) & 0xFF;
-        buffer[6] = (dataToPack >> 16) & 0xFF;
-        buffer[7] = (dataToPack >> 24) & 0xFF;
-
-        // CRC16-Xmodem Berechnung
-        return calculateCRC16Xmodem(buffer, sizeof(buffer));
+        // Data in Byte-Array umwandeln (7 Byte)
+        for (int i = 0; i < 7; ++i) {
+            byteArray[4 + i] = static_cast<uint8_t>(data >> (48 - i * 8));
+        }
+        return crc16_xmodem(byteArray, sizeof(byteArray));
     }
 
 };
