@@ -14,22 +14,45 @@ static const int32_t BIT_ZERO_HIGH_US = 315;
 static const int32_t BIT_ZERO_LOW_US = 567;
 static const int32_t FOOTER_MARK_US = 1197;
 
+inline uint16_t crc16_xmodem(const std::vector<uint8_t>& data) {
+    uint16_t crc = 0x0000; // Initial value
+    uint16_t polynomial = 0x1021; // XMODEM polynomial
+
+    for (uint8_t byte : data) {
+        crc ^= (byte << 8); // Bring in the byte
+
+        for (int i = 0; i < 8; ++i) { // Process each bit
+            if (crc & 0x8000) {
+                crc = (crc << 1) ^ polynomial;
+            } else {
+                crc <<= 1;
+            }
+        }
+    }
+
+    return crc & 0xFFFF; // Ensure CRC is within 16 bits
+}
+
 void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
+  data.calculate_crc();
   dst->set_carrier_frequency(38000);
   dst->reserve(2 + data.nbits * 2u);
 
+  for (int8_t i = 0; i < 10; i++) {
+    dst->item(SYNC_US, SYNC_US);
+  }
   dst->item(SYNC_US, HEADER_LOW_US);
 
-  for (uint32_t mask = 1UL << (data.nbits - 1); mask != 0; mask >>= 1) {
-    if (data.address & mask) {
+  for (uint8_t idx = 0 ; idx < data.nbits; idx++) {
+    if (reinterpret_cast<const uint8_t *>(&data)[idx] == 1) {
       dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
     } else {
       dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
     }
   }
-
-  dst->mark(BIT_ONE_HIGH_US);
+  dst->mark(FOOTER_MARK_US);
 }
+
 optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   LTECHData out{
       .address = 0,
