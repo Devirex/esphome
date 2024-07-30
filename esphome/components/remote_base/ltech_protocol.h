@@ -34,7 +34,7 @@ struct LTECHData {
         }
 
         // CRC16-Xmodem Polynom ist 0x1021
-        return crc16_xmodem(crc_data.data(), crc_data.size(), 0x1021);
+        return crc16_xmodem(crc_data.data(), crc_data.size());
     }
 };
 
