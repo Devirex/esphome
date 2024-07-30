@@ -8,8 +8,7 @@
 namespace esphome {
 namespace remote_base {
 
-
-uint16_t crc16_xmodem(const uint8_t* data, size_t length);
+uint16_t calculateCRC16Xmodem(const uint8_t *data, size_t length);
 struct LTECHData {
   uint32_t address;
   uint64_t data : 56;
@@ -19,10 +18,9 @@ struct LTECHData {
   bool operator==(const LTECHData &rhs) const { return address == rhs.address && data == rhs.data && check == rhs.check && nbits == rhs.nbits; }
   uint16_t calculate_crc() const {
         // Byte-Array zum Packen der relevanten Daten (address und data)
-      uint8_t buffer[8]; // address (4 Byte) + data (4 Byte)
+        uint8_t buffer[8]; // address (4 Byte) + data (4 Byte)
 
-
-        // address in die ersten 4 Bytes packen (little-endian)
+        // address in die ersten 4 Bytes packen (Little-Endian)
         buffer[0] = address & 0xFF;
         buffer[1] = (address >> 8) & 0xFF;
         buffer[2] = (address >> 16) & 0xFF;
@@ -35,10 +33,10 @@ struct LTECHData {
         buffer[6] = (dataToPack >> 16) & 0xFF;
         buffer[7] = (dataToPack >> 24) & 0xFF;
 
-
         // CRC16-Xmodem Berechnung
-        return crc16_xmodem(buffer, sizeof(buffer));
+        return calculateCRC16Xmodem(buffer, sizeof(buffer));
     }
+
 };
 
 
