@@ -645,7 +645,11 @@ async def lg_action(var, config, args):
 LTECHData, LTECHBinarySensor, LTECHTrigger, LTECHAction, LTECHDumper = declare_protocol("LTECH")
 LTECH_SCHEMA = cv.Schema(
     {
-        cv.Required(CONF_DATA): cv.hex_uint32_t,
+        cv.Required(CONF_ADDRESS): cv.hex_uint32_t,
+        cv.Required(CONF_MODE): cv.hex_uint8_t,
+        cv.Required(CONF_RGBW): cv.hex_uint32_t,
+        cv.Required(CONF_CHANNEL): cv.hex_uint32_t,
+        cv.Required(CONF_SPEED): cv.hex_uint32_t,
         cv.Optional(CONF_NBITS, default=104): cv.one_of(104, 104, int=True),
     }
 )
