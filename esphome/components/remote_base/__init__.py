@@ -656,12 +656,16 @@ LTECH_SCHEMA = cv.Schema(
 
 
 @register_binary_sensor("ltech", LTECHBinarySensor, LTECH_SCHEMA)
-def lg_binary_sensor(var, config):
+def ltech_binary_sensor(var, config):
     cg.add(
         var.set_data(
             cg.StructInitializer(
                 LTECHData,
-                ("data", config[CONF_DATA]),
+                ("address", config[CONF_ADDRESS]),
+                ("mode", config[CONF_MODE]),
+                ("rgbw", config[CONF_RGBW]),
+                ("channel", config[CONF_CHANNEL]),
+                ("speed", config[CONF_SPEED]),
                 ("nbits", config[CONF_NBITS]),
             )
         )
@@ -669,19 +673,27 @@ def lg_binary_sensor(var, config):
 
 
 @register_trigger("ltech", LTECHTrigger, LTECHData)
-def lg_trigger(var, config):
+def ltech_trigger(var, config):
     pass
 
 
 @register_dumper("ltech", LTECHDumper)
-def lg_dumper(var, config):
+def ltech_dumper(var, config):
     pass
 
 
 @register_action("ltech", LTECHAction, LTECH_SCHEMA)
-async def lg_action(var, config, args):
-    template_ = await cg.templatable(config[CONF_DATA], args, cg.uint32)
+async def ltech_action(var, config, args):
+    template_ = await cg.templatable(config[CONF_ADDRESS], args, cg.uint32)
     cg.add(var.set_data(template_))
+    template_ = await cg.templatable(config[CONF_MODE], args, cg.uint8)
+    cg.add(var.set_mode(template_))
+    template_ = await cg.templatable(config[CONF_RGBW], args, cg.uint32)
+    cg.add(var.set_rgbw(template_))
+    template_ = await cg.templatable(config[CONF_CHANNEL], args, cg.uint32)
+    cg.add(var.set_channel(template_))
+    template_ = await cg.templatable(config[CONF_SPEED], args, cg.uint32)
+    cg.add(var.set_speed(template_))
     template_ = await cg.templatable(config[CONF_NBITS], args, cg.uint8)
     cg.add(var.set_nbits(template_))
 
