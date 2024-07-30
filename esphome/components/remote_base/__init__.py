@@ -646,10 +646,8 @@ LTECHData, LTECHBinarySensor, LTECHTrigger, LTECHAction, LTECHDumper = declare_p
 LTECH_SCHEMA = cv.Schema(
     {
         cv.Required(CONF_ADDRESS): cv.hex_uint32_t,
-        cv.Required(CONF_MODE): cv.hex_uint8_t,
-        cv.Required(CONF_RGBW): cv.hex_uint32_t,
-        cv.Required(CONF_CHANNEL): cv.hex_uint32_t,
-        cv.Required(CONF_SPEED): cv.hex_uint32_t,
+        cv.Required(CONF_DATA): cv.hex_int, 
+        cv.Required(CONF_CHECK): cv.hex_uint16_t,
         cv.Optional(CONF_NBITS, default=104): cv.one_of(104, 104, int=True),
     }
 )
@@ -662,10 +660,8 @@ def ltech_binary_sensor(var, config):
             cg.StructInitializer(
                 LTECHData,
                 ("address", config[CONF_ADDRESS]),
-                ("mode", config[CONF_MODE]),
-                ("rgbw", config[CONF_RGBW]),
-                ("channel", config[CONF_CHANNEL]),
-                ("speed", config[CONF_SPEED]),
+                ("data", config[CONF_DATA]),
+                ("check", config[CONF_CHANNEL]),
                 ("nbits", config[CONF_NBITS]),
             )
         )
@@ -686,14 +682,10 @@ def ltech_dumper(var, config):
 async def ltech_action(var, config, args):
     template_ = await cg.templatable(config[CONF_ADDRESS], args, cg.uint32)
     cg.add(var.set_data(template_))
-    template_ = await cg.templatable(config[CONF_MODE], args, cg.uint8)
-    cg.add(var.set_mode(template_))
-    template_ = await cg.templatable(config[CONF_RGBW], args, cg.uint32)
-    cg.add(var.set_rgbw(template_))
-    template_ = await cg.templatable(config[CONF_CHANNEL], args, cg.uint32)
-    cg.add(var.set_channel(template_))
-    template_ = await cg.templatable(config[CONF_SPEED], args, cg.uint32)
-    cg.add(var.set_speed(template_))
+    template_ = await cg.templatable(config[CONF_DATA], args, cg.int_)
+    cg.add(var.set_data(template_))
+    template_ = await cg.templatable(config[CONF_CHECK], args, cg.uint16)
+    cg.add(var.set_check(template_))
     template_ = await cg.templatable(config[CONF_NBITS], args, cg.uint8)
     cg.add(var.set_nbits(template_))
 
