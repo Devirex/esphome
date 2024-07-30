@@ -21,7 +21,6 @@ struct LTECHData {
         // Byte-Array zum Packen der relevanten Daten (address und data)
       uint8_t buffer[8]; // address (4 Byte) + data (4 Byte)
 
-        uint8_t buffer[8]; // address (4 Byte) + data (4 Byte)
 
         // address in die ersten 4 Bytes packen (little-endian)
         buffer[0] = address & 0xFF;
