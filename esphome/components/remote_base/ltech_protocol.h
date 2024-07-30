@@ -9,7 +9,7 @@ namespace esphome {
 namespace remote_base {
 
 
-static uint16_t crc16_xmodem(const std::vector<uint8_t>& data) {}; 
+static uint16_t crc16_xmodem(const std::vector<uint8_t>& data); 
 struct LTECHData {
   uint32_t address;
   uint8_t mode;
