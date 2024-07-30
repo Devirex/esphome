@@ -16,7 +16,7 @@ struct LTECHData {
   uint16_t check;
   uint8_t nbits;
 
-  bool operator==(const LTECHData &rhs) const { return address == rhs.address && mode == rhs.data && check == rhs.check && nbits == rhs.nbits; }
+  bool operator==(const LTECHData &rhs) const { return address == rhs.address && data == rhs.data && check == rhs.check && nbits == rhs.nbits; }
 };
 
 
