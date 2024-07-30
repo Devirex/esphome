@@ -21,7 +21,7 @@ struct LTECHData {
   uint8_t nbits;
 
   bool operator==(const LTECHData &rhs) const { return address == rhs.address && mode == rhs.mode && rgb == rhs.rgb && function == rhs.function && white == rhs.white && speed == rhs.speed && crc == rhs.crc && nbits == rhs.nbits; }
-  void calculate_crc(){ crc = crc16_xmodem({address, mode, rgb, function, white, speed}); }
+  void calculate_crc(){ this.crc = crc16_xmodem({address, mode, rgb, function, white, speed}); }
 
 };
 
