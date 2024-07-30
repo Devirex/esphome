@@ -33,6 +33,22 @@ uint16_t crc16_xmodem(const uint8_t* data, size_t length) {
     return crc & 0xFFFF; // Ensure CRC is within 16 bits
 }
 
+vector<uint8_t> convertToBytes(uint32_t value32, uint64_t value64) {
+    vector<uint8_t> bytes;
+
+    // Extrahiere Bytes von uint32_t (4 Bytes)
+    for (int i = 3; i >= 0; --i) {
+        bytes.push_back((value32 >> (i * 8)) & 0xFF);
+    }
+
+    // Extrahiere Bytes von uint64_t (8 Bytes)
+    for (int i = 7; i >= 0; --i) {
+        bytes.push_back((value64 >> (i * 8)) & 0xFF);
+    }
+
+    return bytes;
+}
+
 void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   dump(data);
   dst->set_carrier_frequency(38000);
