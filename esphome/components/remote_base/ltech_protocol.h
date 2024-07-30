@@ -19,17 +19,17 @@ struct LTECHData {
   bool operator==(const LTECHData &rhs) const { return address == rhs.address && data == rhs.data && check == rhs.check && nbits == rhs.nbits; }
   uint16_t calculate_crc() const {
         // Byte-Array zum Packen der relevanten Daten (address und data)
-        uint8_t buffer[8]; // address (4 Byte) + data (4 Byte), data wird auf 4 Byte gekürzt
+      uint8_t buffer[8]; // address (4 Byte) + data (4 Byte)
 
         // address in die ersten 4 Bytes packen
         std::memcpy(buffer, &address, sizeof(address));
         
-        // data in die nächsten 4 Bytes packen (obwohl data 7 Byte groß ist, nehmen wir nur die unteren 4 Byte)
-        uint32_t truncatedData = static_cast<uint32_t>(data & 0xFFFFFFFFFFFF); // 56 Bit auf 64 Bit Maskierung
+        // data in die nächsten 4 Bytes packen (56 Bit auf 4 Byte gekürzt)
+        uint32_t truncatedData = static_cast<uint32_t>(data & 0xFFFFFFFF); // 4 Byte für die CRC
         std::memcpy(buffer + sizeof(address), &truncatedData, sizeof(truncatedData));
 
         // CRC16-Xmodem Berechnung
-        return crc16_xmodem(buffer, sizeof(buffer));
+        return calculateCRC16Xmodem(buffer, sizeof(buffer));
     }
 };
 
