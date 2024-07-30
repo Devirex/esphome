@@ -34,14 +34,14 @@ DECLARE_REMOTE_PROTOCOL(LTECH)
 
 template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<Ts...> {
  public:
-  TEMPLATABLE_VALUE(uint32_t, address)
+  TEMPLATABLE_VALUE(uint32_t, id)
   TEMPLATABLE_VALUE(uint64_t, data)
   TEMPLATABLE_VALUE(uint32_t, check)
   TEMPLATABLE_VALUE(uint8_t, nbits)
 
   void encode(RemoteTransmitData *dst, Ts... x) override {
     LTECHData data{};
-    data.address = this->address_.value(x...);
+    data.address = this->id_.value(x...);
     data.data = this->data_.value(x...);
     data.check = crc16_xmodem(data.data);
     data.nbits = this->nbits_.value(x...);

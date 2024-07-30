@@ -646,7 +646,7 @@ LTECHData, LTECHBinarySensor, LTECHTrigger, LTECHAction, LTECHDumper = declare_p
 LTECH_SCHEMA = cv.Schema(
     {
         cv.Required(CONF_DATA): cv.hex_int, 
-        cv.Optional(CONF_ADDRESS, default=0x0000): cv.hex_uint32_t,
+        cv.Optional(CONF_ID, default=0x0000): cv.hex_uint32_t,
         cv.Optional(CONF_CHECK, default=0x0000): cv.hex_uint16_t,
         cv.Optional(CONF_NBITS, default=104): cv.one_of(104, 104, int=True),
     }
@@ -659,7 +659,7 @@ def ltech_binary_sensor(var, config):
         var.set_data(
             cg.StructInitializer(
                 LTECHData,
-                ("address", config[CONF_ADDRESS]),
+                ("address", config[CONF_ID]),
                 ("data", config[CONF_DATA]),
                 ("check", config[CONF_CHECK]),
                 ("nbits", config[CONF_NBITS]),
@@ -680,7 +680,7 @@ def ltech_dumper(var, config):
 
 @register_action("ltech", LTECHAction, LTECH_SCHEMA)
 async def ltech_action(var, config, args):
-    template_ = await cg.templatable(config[CONF_ADDRESS], args, cg.uint32)
+    template_ = await cg.templatable(config[CONF_ID], args, cg.uint32)
     cg.add(var.set_data(template_))
     template_ = await cg.templatable(config[CONF_DATA], args, cg.int_)
     cg.add(var.set_data(template_))
