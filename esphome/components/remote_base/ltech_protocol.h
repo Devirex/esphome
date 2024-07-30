@@ -9,7 +9,7 @@ namespace esphome {
 namespace remote_base {
 
 
-uint16_t crc16_xmodem(uint64_t data);
+uint16_t crc16_xmodem(const uint8_t* data, size_t length);
 struct LTECHData {
   uint32_t address;
   uint64_t data : 56;
@@ -43,7 +43,7 @@ template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<
     LTECHData data{};
     data.address = this->address_.value(x...);
     data.data = this->data_.value(x...);
-    data.check = crc16_xmodem(data.data);
+    data.check = crc16_xmodem({data.address, data.data}, sizeof({data.address, data.data}));
     data.nbits = this->nbits_.value(x...);
     LTECHProtocol().encode(dst, data);
   }
