@@ -35,6 +35,7 @@ inline uint16_t crc16_xmodem(const std::vector<uint8_t>& data) {
 
 void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   data.calculate_crc();
+  dump(data);
   dst->set_carrier_frequency(38000);
   dst->reserve(2 + data.nbits * 2u);
 
