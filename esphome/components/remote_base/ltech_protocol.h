@@ -42,7 +42,7 @@ template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<
   void encode(RemoteTransmitData *dst, Ts... x) override {
     LTECHData data{};
     data.address = this->address_.value(x...);
-    data.data = this->data_.value(x...)
+    data.data = this->data_.value(x...);
     data.check = this->check.value(x...);
     data.nbits = this->nbits_.value(x...);
     LTECHProtocol().encode(dst, data);
