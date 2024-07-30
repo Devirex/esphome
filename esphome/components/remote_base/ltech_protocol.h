@@ -23,6 +23,9 @@ struct LTECHData {
 
 };
 
+
+inline uint16_t crc16_xmodem(const std::vector<uint8_t>& data) {}
+
 class LTECHProtocol : public RemoteProtocol<LTECHData> {
  public:
   void encode(RemoteTransmitData *dst, const LTECHData &data) override;
@@ -57,7 +60,7 @@ template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<
   }
 };
 
-inline uint16_t crc16_xmodem(const std::vector<uint8_t>& data){}
+
 
 }  // namespace remote_base
 }  // namespace esphome
