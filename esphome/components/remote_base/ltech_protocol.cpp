@@ -14,7 +14,7 @@ static const int32_t BIT_ZERO_HIGH_US = 315;
 static const int32_t BIT_ZERO_LOW_US = 567;
 static const int32_t FOOTER_MARK_US = 1197;
 
-inline uint16_t crc16_xmodem(const std::vector<uint8_t>& data) {
+uint16_t LTECHProtocol::crc16_xmodem(const std::vector<uint8_t>& data) {
     uint16_t crc = 0x0000; // Initial value
     uint16_t polynomial = 0x1021; // XMODEM polynomial
 

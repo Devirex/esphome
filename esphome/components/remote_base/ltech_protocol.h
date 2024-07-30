@@ -24,13 +24,14 @@ struct LTECHData {
 };
 
 
-inline uint16_t crc16_xmodem(const std::vector<uint8_t>& data) {}
 
 class LTECHProtocol : public RemoteProtocol<LTECHData> {
  public:
   void encode(RemoteTransmitData *dst, const LTECHData &data) override;
   optional<LTECHData> decode(RemoteReceiveData src) override;
   void dump(const LTECHData &data) override;
+ private:
+  static uint16_t crc16_xmodem(const std::vector<uint8_t>& data) {}; 
 };
 
 DECLARE_REMOTE_PROTOCOL(LTECH)
