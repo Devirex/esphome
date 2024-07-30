@@ -14,7 +14,7 @@ static const int32_t BIT_ZERO_HIGH_US = 315;
 static const int32_t BIT_ZERO_LOW_US = 567;
 static const int32_t FOOTER_MARK_US = 1197;
 
-uint16_t crc16_xmodem(initializer_list<uint8_t> data) {
+uint16_t crc16_xmodem(std::initializer_list<uint8_t> data) {
     uint16_t crc = 0xFFFF; // Initialwert
 
     for (uint8_t byte : data) {
