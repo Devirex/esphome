@@ -9,7 +9,7 @@ namespace esphome {
 namespace remote_base {
 
 
-uint16_t crc16_xmodem(initializer_list<uint8_t> data);
+uint16_t crc16_xmodem(const uint8_t* data, size_t length);
 struct LTECHData {
   uint32_t address;
   uint64_t data : 56;
@@ -17,6 +17,24 @@ struct LTECHData {
   uint8_t nbits;
 
   bool operator==(const LTECHData &rhs) const { return address == rhs.address && data == rhs.data && check == rhs.check && nbits == rhs.nbits; }
+  uint16_t calculate_crc() const {
+        std::vector<uint8_t> crc_data;
+
+        // Füge address hinzu
+        crc_data.push_back(address & 0xFF);
+        crc_data.push_back((address >> 8) & 0xFF);
+        crc_data.push_back((address >> 16) & 0xFF);
+        crc_data.push_back((address >> 24) & 0xFF);
+
+        // Füge data hinzu (nur die unteren 56 Bits)
+        for (size_t i = 0; i < 7; ++i) {
+            crc_data.push_back(data & 0xFF);
+            data >>= 8;
+        }
+
+        // Berechne die CRC
+        return crc16_xmodem(crc_data.data(), crc_data.size());
+    }
 };
 
 
@@ -43,7 +61,7 @@ template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<
     LTECHData data{};
     data.address = this->address_.value(x...);
     data.data = this->data_.value(x...);
-    data.check = crc16_xmodem( {data.address, data.data});
+    data.check = data.calculate_crc();
     data.nbits = this->nbits_.value(x...);
     LTECHProtocol().encode(dst, data);
   }
