@@ -9,7 +9,7 @@ namespace esphome {
 namespace remote_base {
 
 
-uint16_t crc16_xmodem(uint64_t data) {};
+uint16_t crc16_xmodem(uint64_t data);
 struct LTECHData {
   uint32_t address;
   uint64_t data : 56;
