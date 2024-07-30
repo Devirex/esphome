@@ -680,7 +680,7 @@ def ltech_dumper(var, config):
 
 @register_action("ltech", LTECHAction, LTECH_SCHEMA)
 async def ltech_action(var, config, args):
-    template_ = await cg.templatable(config[CONF_ID], args, cg.uint32)
+    template_ = await cg.templatable(config[CONF_ADDRESS], args, cg.uint32)
     cg.add(var.set_address(template_))
     template_ = await cg.templatable(config[CONF_DATA], args, cg.uint64)
     cg.add(var.set_data(template_))
