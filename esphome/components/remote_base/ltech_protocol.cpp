@@ -66,19 +66,19 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
     if (out.nbits % 7 == 0) {
       byte = reverse_bits(byte);
       if (out.nbits < 32) {
-      out.address = (out.address << 8) | byte;
+      out.address = (out.address << 7) | byte;
       } else if (out.nbits < 40) {
-        out.mode = (out.mode << 8) | byte;
+        out.mode = (out.mode << 7) | byte;
       } else if (out.nbits < 64) {  
-        out.rgb = (out.rgb << 8) | byte;
+        out.rgb = (out.rgb << 7) | byte;
       } else if (out.nbits < 72) {
-        out.function = (out.function << 8) | byte;
+        out.function = (out.function << 7) | byte;
       } else if (out.nbits < 80) {
-        out.white = (out.white << 8) | byte;
+        out.white = (out.white << 7) | byte;
       } else if (out.nbits < 88) {
-        out.speed = (out.speed << 8) | byte;
+        out.speed = (out.speed << 7) | byte;
       } else if (out.nbits < 104) {
-        out.crc = (out.crc << 8) | byte;
+        out.crc = (out.crc << 7) | byte;
       }
     }
   }
