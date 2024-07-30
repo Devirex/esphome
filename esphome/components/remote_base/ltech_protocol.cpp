@@ -14,14 +14,13 @@ static const int32_t BIT_ZERO_HIGH_US = 315;
 static const int32_t BIT_ZERO_LOW_US = 567;
 static const int32_t FOOTER_MARK_US = 1197;
 
-uint16_t crc16_xmodem(const uint8_t* data, size_t length) {
-    uint16_t crc = 0x0000; // Initial value
-    uint16_t polynomial = 0x1021; // XMODEM polynomial
+uint16_t crc16_xmodem(const uint8_t *data, size_t length) {
+    uint16_t crc = 0x0000;
+    uint16_t polynomial = 0x1021;
 
     for (size_t i = 0; i < length; ++i) {
-        crc ^= (data[i] << 8); // Bring in each byte
-
-        for (int j = 0; j < 8; ++j) { // Process each bit
+        crc ^= (data[i] << 8);
+        for (int j = 0; j < 8; ++j) {
             if (crc & 0x8000) {
                 crc = (crc << 1) ^ polynomial;
             } else {
@@ -29,8 +28,7 @@ uint16_t crc16_xmodem(const uint8_t* data, size_t length) {
             }
         }
     }
-
-    return crc & 0xFFFF; // Ensure CRC is within 16 bits
+    return crc;
 }
 
 void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {

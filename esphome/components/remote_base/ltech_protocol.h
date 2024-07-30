@@ -17,24 +17,19 @@ struct LTECHData {
   uint8_t nbits;
 
   bool operator==(const LTECHData &rhs) const { return address == rhs.address && data == rhs.data && check == rhs.check && nbits == rhs.nbits; }
-  uint16_t calculate_crc() const {
-        std::vector<uint8_t> crc_data;
+  uint16_t computeCRC16Xmodem() const {
+        // Byte-Array zum Packen der relevanten Daten (address und data)
+        uint8_t buffer[8]; // address (4 Byte) + data (4 Byte), data wird auf 4 Byte gekürzt
 
-        // Füge address hinzu
-        crc_data.push_back(address & 0xFF);
-        crc_data.push_back((address >> 8) & 0xFF);
-        crc_data.push_back((address >> 16) & 0xFF);
-        crc_data.push_back((address >> 24) & 0xFF);
+        // address in die ersten 4 Bytes packen
+        std::memcpy(buffer, &address, sizeof(address));
+        
+        // data in die nächsten 4 Bytes packen (obwohl data 7 Byte groß ist, nehmen wir nur die unteren 4 Byte)
+        uint32_t truncatedData = static_cast<uint32_t>(data & 0xFFFFFFFFFFFF); // 56 Bit auf 64 Bit Maskierung
+        std::memcpy(buffer + sizeof(address), &truncatedData, sizeof(truncatedData));
 
-        // Füge data hinzu (nur die unteren 56 Bits)
-        uint64_t temp_data = data; // Erstelle eine Kopie des Datenfeldes
-        for (size_t i = 0; i < 7; ++i) {
-            crc_data.push_back(temp_data & 0xFF);
-            temp_data >>= 8;
-        }
-
-        // CRC16-Xmodem Polynom ist 0x1021
-        return crc16_xmodem(crc_data.data(), crc_data.size());
+        // CRC16-Xmodem Berechnung
+        return crc16_xmodem(buffer, sizeof(buffer));
     }
 };
 
