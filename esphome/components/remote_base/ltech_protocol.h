@@ -14,9 +14,9 @@ struct LTECHData {
   uint32_t address;
   uint8_t mode;
   uint32_t rgb : 24;
-  uint8_t speed;
-  uint8_t white;
   uint8_t function;
+  uint8_t white;
+  uint8_t speed;
   uint16_t crc;
   uint8_t nbits;
 
