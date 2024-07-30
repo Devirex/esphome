@@ -27,13 +27,14 @@ struct LTECHData {
         crc_data.push_back((address >> 24) & 0xFF);
 
         // Füge data hinzu (nur die unteren 56 Bits)
+        uint64_t temp_data = data; // Erstelle eine Kopie des Datenfeldes
         for (size_t i = 0; i < 7; ++i) {
-            crc_data.push_back(data & 0xFF);
-            data >>= 8;
+            crc_data.push_back(temp_data & 0xFF);
+            temp_data >>= 8;
         }
 
-        // Berechne die CRC
-        return crc16_xmodem(crc_data.data(), crc_data.size());
+        // CRC16-Xmodem Polynom ist 0x1021
+        return crc16_xmodem(crc_data.data(), crc_data.size(), 0x1021);
     }
 };
 
