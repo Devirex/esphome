@@ -17,7 +17,7 @@ struct LTECHData {
   uint8_t nbits;
 
   bool operator==(const LTECHData &rhs) const { return address == rhs.address && data == rhs.data && check == rhs.check && nbits == rhs.nbits; }
-  uint16_t computeCRC16Xmodem() const {
+  uint16_t calculate_crc() const {
         // Byte-Array zum Packen der relevanten Daten (address und data)
         uint8_t buffer[8]; // address (4 Byte) + data (4 Byte), data wird auf 4 Byte gekürzt
 
