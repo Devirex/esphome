@@ -12,15 +12,11 @@ namespace remote_base {
 static uint16_t crc16_xmodem(const std::vector<uint8_t>& data); 
 struct LTECHData {
   uint32_t address;
-  uint8_t mode;
-  uint32_t rgb : 24;
-  uint8_t function;
-  uint8_t white;
-  uint8_t speed;
-  uint16_t crc;
+  uint64_t data : 56;
+  uint16_t check;
   uint8_t nbits;
 
-  bool operator==(const LTECHData &rhs) const { return address == rhs.address && mode == rhs.mode && rgb == rhs.rgb && function == rhs.function && white == rhs.white && speed == rhs.speed && crc == rhs.crc && nbits == rhs.nbits; }
+  bool operator==(const LTECHData &rhs) const { return address == rhs.address && mode == rhs.data && check == rhs.check && nbits == rhs.nbits; }
 };
 
 
@@ -39,23 +35,15 @@ DECLARE_REMOTE_PROTOCOL(LTECH)
 template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<Ts...> {
  public:
   TEMPLATABLE_VALUE(uint32_t, address)
-  TEMPLATABLE_VALUE(uint8_t, mode)
-  TEMPLATABLE_VALUE(uint32_t, rgb)
-  TEMPLATABLE_VALUE(uint8_t, function)
-  TEMPLATABLE_VALUE(uint8_t, white)
-  TEMPLATABLE_VALUE(uint8_t, speed)
-  TEMPLATABLE_VALUE(uint16_t, crc)
+  TEMPLATABLE_VALUE(uint64_t, data)
+  TEMPLATABLE_VALUE(uint32_t, check)
   TEMPLATABLE_VALUE(uint8_t, nbits)
 
   void encode(RemoteTransmitData *dst, Ts... x) override {
     LTECHData data{};
     data.address = this->address_.value(x...);
-    data.mode = this->mode_.value(x...);
-    data.rgb = this->rgb_.value(x...);
-    data.function = this->function_.value(x...);
-    data.white = this->white_.value(x...);
-    data.speed = this->speed_.value(x...);
-    data.crc = this->crc_.value(x...);
+    data.data = this->data_.value(x...)
+    data.check = this->check.value(x...);
     data.nbits = this->nbits_.value(x...);
     LTECHProtocol().encode(dst, data);
   }

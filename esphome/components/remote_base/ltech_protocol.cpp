@@ -56,12 +56,8 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
 optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   LTECHData out{
       .address = 0,
-      .mode = 0,
-      .rgb = 0,
-      .function = 0,
-      .white = 0,
-      .speed = 0,
-      .crc = 0,
+      .data = 0,
+      .check = 0,
       .nbits = 0
   };
 
@@ -90,16 +86,8 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
       byte = reverse_bits(byte);
       if(out.nbits < 32) {
         out.address = (out.address << 8) | byte;
-      }else if(out.nbits < 40) {
-        out.mode = (out.mode << 8) | byte;
-      }else if(out.nbits < 64) {
-        out.rgb = (out.rgb << 8) | byte;
-      }else if(out.nbits < 72) {
-        out.function = (out.function << 8) | byte;
-      }else if(out.nbits < 80) {
-        out.white = (out.white << 8) | byte;
       }else if(out.nbits < 88) {
-        out.speed = (out.speed << 8) | byte;
+        out.data = (out.data << 8) | byte;
       }else if(out.nbits < 104) {
         out.crc = (out.crc << 8) | byte;
       }
@@ -111,7 +99,7 @@ optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
   return out;
 }
 void LTECHProtocol::dump(const LTECHData &data) {
-  ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", mode: %02" PRIX32 ", rgb: %06" PRIX32 ", function: %02" PRIX32 ", white: %02" PRIX32 ", speed: %02" PRIX32 ", crc: %04" PRIX32 ", nbits=%d", data.address, data.mode, data.rgb, data.function, data.white, data.speed, data.crc, data.nbits );
+  ESP_LOGI(TAG, "Received LTECH address: %08" PRIX32 ", data: %56" PRIX64 ", check: %04" PRIX32 ", nbits=%d", data.address, data.data, data.check, data.nbits );
 } 
 }  // namespace remote_base
 } 
