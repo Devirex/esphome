@@ -34,7 +34,7 @@ DECLARE_REMOTE_PROTOCOL(LTECH)
 
 template<typename... Ts> class LTECHAction : public RemoteTransmitterActionBase<Ts...> {
  public:
-  TEMPLATABLE_VALUE(uint32_t, id)
+  TEMPLATABLE_VALUE(uint32_t, address)
   TEMPLATABLE_VALUE(uint64_t, data)
   TEMPLATABLE_VALUE(uint32_t, check)
   TEMPLATABLE_VALUE(uint8_t, nbits)
