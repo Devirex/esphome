@@ -21,12 +21,21 @@ struct LTECHData {
         // Byte-Array zum Packen der relevanten Daten (address und data)
       uint8_t buffer[8]; // address (4 Byte) + data (4 Byte)
 
-        // address in die ersten 4 Bytes packen
-        std::memcpy(buffer, &address, sizeof(address));
-        
-        // data in die nächsten 4 Bytes packen (56 Bit auf 4 Byte gekürzt)
-        uint32_t truncatedData = static_cast<uint32_t>(data & 0xFFFFFFFF); // 4 Byte für die CRC
-        std::memcpy(buffer + sizeof(address), &truncatedData, sizeof(truncatedData));
+        uint8_t buffer[8]; // address (4 Byte) + data (4 Byte)
+
+        // address in die ersten 4 Bytes packen (little-endian)
+        buffer[0] = address & 0xFF;
+        buffer[1] = (address >> 8) & 0xFF;
+        buffer[2] = (address >> 16) & 0xFF;
+        buffer[3] = (address >> 24) & 0xFF;
+
+        // data in die nächsten 4 Bytes packen (56 Bit auf 8 Byte)
+        uint64_t dataToPack = data;
+        buffer[4] = dataToPack & 0xFF;
+        buffer[5] = (dataToPack >> 8) & 0xFF;
+        buffer[6] = (dataToPack >> 16) & 0xFF;
+        buffer[7] = (dataToPack >> 24) & 0xFF;
+
 
         // CRC16-Xmodem Berechnung
         return crc16_xmodem(buffer, sizeof(buffer));
