@@ -645,8 +645,8 @@ async def lg_action(var, config, args):
 LTECHData, LTECHBinarySensor, LTECHTrigger, LTECHAction, LTECHDumper = declare_protocol("LTECH")
 LTECH_SCHEMA = cv.Schema(
     {
+        cv.Required(CONF_ADDRESS): cv.hex_int,
         cv.Required(CONF_DATA): cv.hex_int, 
-        cv.Optional(CONF_ID, default=0x0000): cv.hex_uint32_t,
         cv.Optional(CONF_CHECK, default=0x0000): cv.hex_uint16_t,
         cv.Optional(CONF_NBITS, default=104): cv.one_of(104, 104, int=True),
     }
@@ -659,7 +659,7 @@ def ltech_binary_sensor(var, config):
         var.set_data(
             cg.StructInitializer(
                 LTECHData,
-                ("address", config[CONF_ID]),
+                ("address", config[CONF_ADDRESS]),
                 ("data", config[CONF_DATA]),
                 ("check", config[CONF_CHECK]),
                 ("nbits", config[CONF_NBITS]),
@@ -681,8 +681,8 @@ def ltech_dumper(var, config):
 @register_action("ltech", LTECHAction, LTECH_SCHEMA)
 async def ltech_action(var, config, args):
     template_ = await cg.templatable(config[CONF_ID], args, cg.uint32)
-    cg.add(var.set_data(template_))
-    template_ = await cg.templatable(config[CONF_DATA], args, cg.int_)
+    cg.add(var.set_address(template_))
+    template_ = await cg.templatable(config[CONF_DATA], args, cg.uint64)
     cg.add(var.set_data(template_))
     template_ = await cg.templatable(config[CONF_CHECK], args, cg.uint16)
     cg.add(var.set_check(template_))
