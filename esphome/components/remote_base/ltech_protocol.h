@@ -29,7 +29,7 @@ struct LTECHData {
         std::memcpy(buffer + sizeof(address), &truncatedData, sizeof(truncatedData));
 
         // CRC16-Xmodem Berechnung
-        return calculateCRC16Xmodem(buffer, sizeof(buffer));
+        return crc16_xmodem(buffer, sizeof(buffer));
     }
 };
 
