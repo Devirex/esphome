@@ -9,6 +9,7 @@ namespace esphome {
 namespace remote_base {
 
 uint16_t crc16_xmodem(const uint8_t *data, size_t length);
+void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount);
 struct LTECHData {
   uint32_t address;
   uint64_t data : 56;

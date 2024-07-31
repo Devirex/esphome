@@ -41,16 +41,22 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
     dst->item(SYNC_US, SYNC_US);
   }
   dst->item(SYNC_US, HEADER_LOW_US);
-
-  const uint8_t* bytePtr = reinterpret_cast<const uint8_t*>(&data);
-  for (uint8_t idx = 0 ; idx < data.nbits; idx++) {
-    if (bytePtr[idx] == 1) {
-      dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
-    } else {
-      dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
-    }
-  }
+  sendBits(dst, data.address, 32);
+  sendBits(dst, data.data, 56);
+  sendBits(dst, data.check, 16);
   dst->mark(FOOTER_MARK_US);
+  
+}
+
+void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
+    for (int i = bitCount - 1; i >= 0; i--) {
+        // Prüfen, ob das Bit 1 oder 0 ist und den entsprechenden String ausgeben
+        if ((data >> i) & 1) {
+            dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
+        } else {
+            dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
+        }
+    }
 }
 
 optional<LTECHData> LTECHProtocol::decode(RemoteReceiveData src) {
