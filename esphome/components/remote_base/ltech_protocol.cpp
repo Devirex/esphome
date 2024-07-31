@@ -38,17 +38,18 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   dst->set_carrier_frequency(0);
   dst->reserve(2 + data.nbits * 2u);
 
-for(int8_t i = 0; i < 5; i++) {
-  for (int8_t i = 0; i < 10; i++) {
-    dst->item(SYNC_US, SYNC_US);
+  for(int8_t i = 0; i < 5; i++) {
+    for (int8_t i = 0; i < 10; i++) {
+      dst->item(SYNC_US, SYNC_US);
+    }
+    dst->item(SYNC_US, HEADER_LOW_US);
+    sendBits(dst, data.address, 32);
+    sendBits(dst, data.data, 56);
+    sendBits(dst, data.check, 16);
+    
+    dst->mark(FOOTER_MARK_US);
+    dst->space(FOOTER_SPACE_US);
   }
-  dst->item(SYNC_US, HEADER_LOW_US);
-  sendBits(dst, data.address, 32);
-  sendBits(dst, data.data, 56);
-  sendBits(dst, data.check, 16);
-  
-  dst->mark(FOOTER_MARK_US);
-  dst->space(FOOTER_SPACE_US);
 }
 
 void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
