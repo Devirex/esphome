@@ -49,12 +49,15 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
 }
 
 void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
-    for (int i = bitCount - 1; i >= 0; i--) {
-        // Prüfen, ob das Bit 1 oder 0 ist und den entsprechenden String ausgeben
-        if ((data >> i) & 1) {
-            dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
-        } else {
-            dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
+    // Sicherstellen, dass wir nur bis zum angegebenen bitCount gehen
+    for (int byteIndex = 0; byteIndex < (bitCount + 7) / 8; ++byteIndex) {
+        uint8_t byte = (data >> (byteIndex * 8)) & 0xFF;  // Extrahiere das byte
+        for (int bitIndex = 7; bitIndex >= 0; --bitIndex) {
+            if ((byte >> bitIndex) & 1) {
+                dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
+            } else {
+                dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
+            }
         }
     }
 }
