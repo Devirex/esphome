@@ -55,7 +55,7 @@ void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
         reversedData <<= 1;
         reversedData |= (data >> i) & 1;
     }
-    reversedData = reverse_bits(reversedData);
+    reversedData = __bswap64(reversedData);
     for (int i = bitCount - 1; i >= 0; i--) {
         int bit = (reversedData >> i) & 1;
         if (bit) {
