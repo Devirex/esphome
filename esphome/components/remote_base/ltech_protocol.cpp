@@ -13,6 +13,7 @@ static const int32_t BIT_ONE_LOW_US = 283;
 static const int32_t BIT_ZERO_HIGH_US = 315;
 static const int32_t BIT_ZERO_LOW_US = 567;
 static const int32_t FOOTER_MARK_US = 1197;
+static const int32_t FOOTER_SPACE_US = 5600;
 
 uint16_t crc16_xmodem(const uint8_t* data, size_t length) {
     uint16_t crc = 0x0000; // Initialwert
@@ -37,6 +38,7 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   dst->set_carrier_frequency(0);
   dst->reserve(2 + data.nbits * 2u);
 
+for(int8_t i = 0; i < 5; i++) {
   for (int8_t i = 0; i < 10; i++) {
     dst->item(SYNC_US, SYNC_US);
   }
@@ -46,7 +48,7 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   sendBits(dst, data.check, 16);
   
   dst->mark(FOOTER_MARK_US);
-  
+  dst->space(FOOTER_SPACE_US);
 }
 
 void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
