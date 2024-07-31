@@ -44,35 +44,24 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
   sendBits(dst, data.address, 32);
   sendBits(dst, data.data, 56);
   sendBits(dst, data.check, 16);
+  
   dst->mark(FOOTER_MARK_US);
   
 }
 
 void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
-    // Berechne die Anzahl der Bytes, die benötigt werden
-    int byteCount = (bitCount + 7) / 8; // Runden auf die nächste Ganzzahl
-    
-    // Array zum Speichern der Bytes in umgekehrter Reihenfolge
-    uint8_t reversedBytes[byteCount];
-    
-    // Bytes in umgekehrter Reihenfolge kopieren
-    for (int i = 0; i < byteCount; ++i) {
-        reversedBytes[i] = (data >> (i * 8)) & 0xFF;
+    uint64_t reversedData = 0;
+    for (int i = 0; i < bitCount; i++) {
+        reversedData <<= 1;
+        reversedData |= (data >> i) & 1;
     }
-    
-    // Durchlaufe die Bytes in umgekehrter Reihenfolge
-    for (int byteIndex = byteCount - 1; byteIndex >= 0; --byteIndex) {
-        // Hole das aktuelle Byte
-        uint8_t currentByte = reversedBytes[byteIndex];
-        
-        // Gehe durch jedes Bit im aktuellen Byte
-        for (int bitIndex = 7; bitIndex >= 0; --bitIndex) {
-            // Extrahiere das Bit
-            if ((currentByte >> bitIndex) & 1) {
-                dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
-            } else {
-                dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
-            }
+    for (int i = bitCount - 1; i >= 0; i--) {
+        // Prüfen, ob das Bit 1 oder 0 ist und den entsprechenden String ausgeben
+        if ((reversedData >> i) & 1) {
+        if ((data >> i) & 1) {
+            dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
+        } else {
+            dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
         }
     }
 }
