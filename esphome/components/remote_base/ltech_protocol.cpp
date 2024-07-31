@@ -52,10 +52,18 @@ void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
     // Berechne die Anzahl der Bytes, die benötigt werden
     int byteCount = (bitCount + 7) / 8; // Runden auf die nächste Ganzzahl
     
+    // Array zum Speichern der Bytes in umgekehrter Reihenfolge
+    uint8_t reversedBytes[byteCount];
+    
+    // Bytes in umgekehrter Reihenfolge kopieren
+    for (int i = 0; i < byteCount; ++i) {
+        reversedBytes[i] = (data >> (i * 8)) & 0xFF;
+    }
+    
     // Durchlaufe die Bytes in umgekehrter Reihenfolge
     for (int byteIndex = byteCount - 1; byteIndex >= 0; --byteIndex) {
         // Hole das aktuelle Byte
-        uint8_t currentByte = (data >> (byteIndex * 8)) & 0xFF;
+        uint8_t currentByte = reversedBytes[byteIndex];
         
         // Gehe durch jedes Bit im aktuellen Byte
         for (int bitIndex = 7; bitIndex >= 0; --bitIndex) {
