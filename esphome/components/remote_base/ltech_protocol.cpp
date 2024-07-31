@@ -49,11 +49,18 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
 }
 
 void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
-    // Sicherstellen, dass wir nur bis zum angegebenen bitCount gehen
-    for (int byteIndex = 0; byteIndex < (bitCount + 7) / 8; ++byteIndex) {
-        uint8_t byte = (data >> (byteIndex * 8)) & 0xFF;  // Extrahiere das byte
+    // Berechne die Anzahl der Bytes, die benötigt werden
+    int byteCount = (bitCount + 7) / 8; // Runden auf die nächste Ganzzahl
+    
+    // Durchlaufe die Bytes in umgekehrter Reihenfolge
+    for (int byteIndex = byteCount - 1; byteIndex >= 0; --byteIndex) {
+        // Hole das aktuelle Byte
+        uint8_t currentByte = (data >> (byteIndex * 8)) & 0xFF;
+        
+        // Gehe durch jedes Bit im aktuellen Byte
         for (int bitIndex = 7; bitIndex >= 0; --bitIndex) {
-            if ((byte >> bitIndex) & 1) {
+            // Extrahiere das Bit
+            if ((currentByte >> bitIndex) & 1) {
                 dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
             } else {
                 dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
