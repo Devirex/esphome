@@ -50,15 +50,26 @@ void LTECHProtocol::encode(RemoteTransmitData *dst, const LTECHData &data) {
 }
 
 void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
+    // Calculate the number of bytes in the bitCount
+    int byteCount = (bitCount + 7) / 8;
+
+    // Reverse the order of bytes
     uint64_t reversedData = 0;
-    for (int i = 0; i < bitCount; i++) {
-        reversedData <<= 1;
-        reversedData |= (data >> i) & 1;
+    for (int byteIndex = 0; byteIndex < byteCount; byteIndex++) {
+        uint8_t byte = (data >> (byteIndex * 8)) & 0xFF;
+        reversedData |= (uint64_t)byte << ((byteCount - 1 - byteIndex) * 8);
     }
-    reversedData = __bswap64(reversedData);
+
+    // Reverse the bit order within each byte
+    uint64_t bitReversedData = 0;
+    for (int i = 0; i < bitCount; i++) {
+        bitReversedData <<= 1;
+        bitReversedData |= (reversedData >> i) & 1;
+    }
+
+    // Send bits from bitReversedData
     for (int i = bitCount - 1; i >= 0; i--) {
-        int bit = (reversedData >> i) & 1;
-        if ((reversedData >> i) & 1) {
+        if ((bitReversedData >> i) & 1) {
             dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
         } else {
             dst->item(BIT_ZERO_HIGH_US, BIT_ZERO_LOW_US);
