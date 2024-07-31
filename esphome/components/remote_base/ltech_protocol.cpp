@@ -58,8 +58,6 @@ void sendBits(RemoteTransmitData *dst, uint64_t data, int bitCount) {
     reversedData = __bswap64(reversedData);
     for (int i = bitCount - 1; i >= 0; i--) {
         int bit = (reversedData >> i) & 1;
-        if (bit) {
-        // Prüfen, ob das Bit 1 oder 0 ist und den entsprechenden String ausgeben
         if ((reversedData >> i) & 1) {
             dst->item(BIT_ONE_HIGH_US, BIT_ONE_LOW_US);
         } else {
