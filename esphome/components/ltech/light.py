@@ -17,7 +17,7 @@ LTECHLightOutput = ltech_ns.class_("LTECHLightOutput", light.LightOutput)
 CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend(
     {
         cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(LTECHLightOutput),
-        cv.Required(CONF_OUTPUT): cv.use_id(remote_transmitter.RemoteTransmitterComponent)),
+        cv.Required(CONF_OUTPUT): cv.use_id(remote_transmitter.RemoteTransmitterComponent),
         #cv.Required(CONF_RED): cv.use_id(output.FloatOutput),
         #cv.Required(CONF_GREEN): cv.use_id(output.FloatOutput),
         #cv.Required(CONF_BLUE): cv.use_id(output.FloatOutput),
