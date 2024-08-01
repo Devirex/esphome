@@ -37,7 +37,7 @@ class LTECHLightOutput : public light::LightOutput {
   }
 
  protected:
-  uint32_t *address_;
+  uint32_t address_;
   bool color_interlock_{false};
 };
 
