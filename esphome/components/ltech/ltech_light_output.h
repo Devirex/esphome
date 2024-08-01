@@ -27,9 +27,17 @@ class LTECHLightOutput : public light::LightOutput {
   }
 
   void update_state(light::LightState *state) override {
-    float red, green, blue, white;
-    state->current_values_as_rgbw(&red, &green, &blue, &white, this->color_interlock_);
-    ESP_LOGD("LTECH", "RGBW: %.2f, %.2f, %.2f, %.2f", red, green, blue, white);
+    bool on;
+    state->current_values_as_binary(&on);
+    if(on) { 
+      float red, green, blue, white;
+      state->current_values_as_rgbw(&red, &green, &blue, &white, this->color_interlock_);
+      ESP_LOGD("LTECH", "ON RGBW: %.2f, %.2f, %.2f, %.2f", red, green, blue, white);
+      
+    }else{
+      ESP_LOGD("LTECH", "Off");
+    }
+    
     //this->red_->set_level(red);
     //this->green_->set_level(green);
     //this->blue_->set_level(blue);
