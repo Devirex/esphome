@@ -10,7 +10,7 @@ namespace ltech {
 
 class LTECHLightOutput : public light::LightOutput {
  public:
-  void set_transmitter(RemoteTransmitterComponent *transmitter) { transmitter_ = transmitter; }
+  void set_transmitter(remote_transmitter::RemoteTransmitterComponent *transmitter) { transmitter_ = transmitter; }
   void set_color_interlock(bool color_interlock) { color_interlock_ = color_interlock; }
   light::LightTraits get_traits() override {
     auto traits = light::LightTraits();
@@ -46,7 +46,7 @@ class LTECHLightOutput : public light::LightOutput {
   }
 
  protected:
-  RemoteTransmitterComponent *transmitter_;
+  remote_transmitter::RemoteTransmitterComponent *transmitter_;
   bool color_interlock_{false};
 };
 
