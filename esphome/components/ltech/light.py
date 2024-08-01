@@ -16,8 +16,8 @@ LTECHLightOutput = ltech_ns.class_("LTECHLightOutput", light.LightOutput)
 
 CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend(
     {
-        cv.Required(CONF_ADDRESS): cv.hex_uint32_t,
         cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(LTECHLightOutput),
+        cv.Required(CONF_ADDRESS): cv.use_id(cv.hex_uint32_t),
         #cv.Required(CONF_RED): cv.use_id(output.FloatOutput),
         #cv.Required(CONF_GREEN): cv.use_id(output.FloatOutput),
         #cv.Required(CONF_BLUE): cv.use_id(output.FloatOutput),
@@ -30,5 +30,6 @@ CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend(
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_OUTPUT_ID])
     await light.register_light(var, config)
+
     address = await cg.get_variable(config[CONF_ADDRESS])
     cg.add(var.set_address(address))
