@@ -2,6 +2,7 @@
 
 #include "esphome/core/component.h"
 #include "esphome/components/light/light_output.h"
+#include "esphome/components/remote_transmitter/remote_transmitter.h"
 #include "esphome/core/log.h"
 
 namespace esphome {
@@ -9,7 +10,7 @@ namespace ltech {
 
 class LTECHLightOutput : public light::LightOutput {
  public:
-  void set_address(uint32_t address) { address_ = address; }
+  void set_transmitter(RemoteTransmitterComponent *transmitter) { transmitter_ = transmitter; }
   void set_color_interlock(bool color_interlock) { color_interlock_ = color_interlock; }
   light::LightTraits get_traits() override {
     auto traits = light::LightTraits();
@@ -45,7 +46,7 @@ class LTECHLightOutput : public light::LightOutput {
   }
 
  protected:
-  uint32_t address_;
+  RemoteTransmitterComponent *transmitter_;
   bool color_interlock_{false};
 };
 
