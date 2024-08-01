@@ -24,7 +24,6 @@ class LTECHLightOutput : public light::LightOutput {
     //this->green_->set_level(green);
     //this->blue_->set_level(blue);
     //this->white_->set_level(white);
-    ESP_LOGD("LTECH", "RGBW: %.2f, %.2f, %.2f, %.2f", red, green, blue, white);
   }
 
   void update_state(light::LightState *state) override {
