@@ -1,6 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import light
+from esphome.components import light, remote_transmitter
 from esphome.const import (
     CONF_BLUE,
     CONF_COLOR_INTERLOCK,
@@ -17,7 +17,7 @@ LTECHLightOutput = ltech_ns.class_("LTECHLightOutput", light.LightOutput)
 CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend(
     {
         cv.GenerateID(CONF_OUTPUT_ID): cv.declare_id(LTECHLightOutput),
-        cv.Required(CONF_OUTPUT): cv.hex_uint32_t,
+        cv.Required(CONF_OUTPUT): cv.use_id(remote_transmitter.RemoteTransmitterComponent)),
         #cv.Required(CONF_RED): cv.use_id(output.FloatOutput),
         #cv.Required(CONF_GREEN): cv.use_id(output.FloatOutput),
         #cv.Required(CONF_BLUE): cv.use_id(output.FloatOutput),
