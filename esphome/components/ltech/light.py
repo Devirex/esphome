@@ -27,9 +27,9 @@ CONFIG_SCHEMA = light.RGB_LIGHT_SCHEMA.extend(
 )
 
 
-async def to_code(config, args):
+async def to_code(config):
     var = cg.new_Pvariable(config[CONF_OUTPUT_ID])
     await light.register_light(var, config)
 
-    address = await cg.templatable(config[CONF_ADDRESS], args, cg.uint32)
+    address = await cg.get_variable(config[CONF_ADDRESS])
     cg.add(var.set_address(address))
