@@ -29,7 +29,7 @@ class LTECHLightOutput : public light::LightOutput {
   void update_state(light::LightState *state) override {
     float red, green, blue, white;
     state->current_values_as_rgbw(&red, &green, &blue, &white, this->color_interlock_);
-    ESP_LOGVV(TAG, "RGBW: %.2f, %.2f, %.2f, %.2f", red, green, blue, white);
+    ESP_LOGVV("LTECH", "RGBW: %.2f, %.2f, %.2f, %.2f", red, green, blue, white);
     //this->red_->set_level(red);
     //this->green_->set_level(green);
     //this->blue_->set_level(blue);
