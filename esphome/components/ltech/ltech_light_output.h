@@ -4,6 +4,7 @@
 #include "esphome/components/light/light_output.h"
 #include "esphome/core/log.h"
 
+
 namespace esphome {
 namespace ltech {
 
@@ -33,10 +34,11 @@ class LTECHLightOutput : public light::LightOutput {
       float red, green, blue, white;
       state->current_values_as_rgbw(&red, &green, &blue, &white, this->color_interlock_);
       ESP_LOGD("LTECH", "ON RGBW: %.2f, %.2f, %.2f, %.2f", red, green, blue, white);
-      ESP_LOGD("LTECH", "Address: %0x08" PRIX32, this->address_);
+      ESP_LOGD("LTECH", "Address: 0x%08" PRIX32, this->address_);
+      
     }else{
       ESP_LOGD("LTECH", "Off");
-      ESP_LOGD("LTECH", "Address: %0x08" PRIX32, this->address_);
+      ESP_LOGD("LTECH", "Address: 0x%08" PRIX32, this->address_);
     }
     
     //this->red_->set_level(red);
